@@ -9,7 +9,7 @@ app = Dash(external_stylesheets=[CERULEAN],prevent_initial_callbacks=True)
 app.title = "Acoustic Environment Explorer"
 app.layout = create_layout(app)
 app.config.suppress_callback_exceptions = True
-app.run(debug=True)
+
 
 
 if __name__ == "__main__":
