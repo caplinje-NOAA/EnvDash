@@ -1,0 +1,9 @@
+numpy 
+dash
+pandas
+dash_bootstrap_components
+dash_leaflet
+scipy
+pyproj
+xarray
+plotly

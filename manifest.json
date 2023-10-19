@@ -1,0 +1,234 @@
+{
+  "version": 1,
+  "locale": "English_United States.1252",
+  "metadata": {
+    "appmode": "python-dash",
+    "entrypoint": "main"
+  },
+  "python": {
+    "version": "3.8.16",
+    "package_manager": {
+      "name": "pip",
+      "version": "23.0.1",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "1580a65f42593132f9da313ab2c0d3ab"
+    },
+    ".spyproject\\config\\backups\\codestyle.ini.bak": {
+      "checksum": "de8a66cdc6940773667c18ef547a3c09"
+    },
+    ".spyproject\\config\\backups\\encoding.ini.bak": {
+      "checksum": "efd70e7a3292196e011a019dfe3edae2"
+    },
+    ".spyproject\\config\\backups\\vcs.ini.bak": {
+      "checksum": "99fdb6058c7677bb609aeecabcd8dd0f"
+    },
+    ".spyproject\\config\\backups\\workspace.ini.bak": {
+      "checksum": "a6d4e921903411c5a010f4d142ed4a00"
+    },
+    ".spyproject\\config\\codestyle.ini": {
+      "checksum": "de8a66cdc6940773667c18ef547a3c09"
+    },
+    ".spyproject\\config\\defaults\\defaults-codestyle-0.2.0.ini": {
+      "checksum": "af6a1f6a1a62a6c37ca62f901d9e89ee"
+    },
+    ".spyproject\\config\\defaults\\defaults-encoding-0.2.0.ini": {
+      "checksum": "650d74483ce6734b72719b7fa4a5d28d"
+    },
+    ".spyproject\\config\\defaults\\defaults-vcs-0.2.0.ini": {
+      "checksum": "b1abf45d196f109529f667dd556bfbe6"
+    },
+    ".spyproject\\config\\defaults\\defaults-workspace-0.2.0.ini": {
+      "checksum": "e9c02b5965a89c2b5dbc2b24a0c42f6d"
+    },
+    ".spyproject\\config\\encoding.ini": {
+      "checksum": "efd70e7a3292196e011a019dfe3edae2"
+    },
+    ".spyproject\\config\\vcs.ini": {
+      "checksum": "99fdb6058c7677bb609aeecabcd8dd0f"
+    },
+    ".spyproject\\config\\workspace.ini": {
+      "checksum": "a6d4e921903411c5a010f4d142ed4a00"
+    },
+    "README.md": {
+      "checksum": "4199d80edac03b1ac7b4fa88fb2ea02b"
+    },
+    "assets\\style.css": {
+      "checksum": "1da6d087bf4b646cb2e03441d8a1bfa2"
+    },
+    "environment\\README.md": {
+      "checksum": "441ae346d50d8b9056ee8c4dfd5ccc31"
+    },
+    "environment\\requirements.txt": {
+      "checksum": "dddaca47cfa59545b58dc99c6db38ecb"
+    },
+    "main.py": {
+      "checksum": "a8a3bb6a6f7bc32ac966a702a1f33534"
+    },
+    "src\\__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src\\__pycache__\\__init__.cpython-38.pyc": {
+      "checksum": "65b2ef05f23fb4f05bc56b57514be859"
+    },
+    "src\\__pycache__\\__init__.cpython-39.pyc": {
+      "checksum": "230c0143e6344bbd51eea6ac9c4743f4"
+    },
+    "src\\components\\__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src\\components\\__pycache__\\__init__.cpython-38.pyc": {
+      "checksum": "5a4d00f7346b50a74ccaa513f8b195f6"
+    },
+    "src\\components\\__pycache__\\__init__.cpython-39.pyc": {
+      "checksum": "eb6a410fe040c201075fc4bb7360597d"
+    },
+    "src\\components\\__pycache__\\alerts.cpython-38.pyc": {
+      "checksum": "15039dfdd82268c47b41d02229f476c8"
+    },
+    "src\\components\\__pycache__\\alerts.cpython-39.pyc": {
+      "checksum": "bc418bd21fc2e4b3fe87c41568e7781e"
+    },
+    "src\\components\\__pycache__\\bar_chart.cpython-39.pyc": {
+      "checksum": "e55922f145d445f829b89ead8f0b6c91"
+    },
+    "src\\components\\__pycache__\\bathOptCard.cpython-38.pyc": {
+      "checksum": "3f81cc97caf13072a7dee28a3d94cd8f"
+    },
+    "src\\components\\__pycache__\\bathOptCard.cpython-39.pyc": {
+      "checksum": "25fa2a32fec06c78aefcff4e9fd60f25"
+    },
+    "src\\components\\__pycache__\\bathplot.cpython-38.pyc": {
+      "checksum": "edbf1928cca6adc75b2c69c6b83105fc"
+    },
+    "src\\components\\__pycache__\\bathplot.cpython-39.pyc": {
+      "checksum": "a2a7424bb3163fbcc3204d0b2c75ef7d"
+    },
+    "src\\components\\__pycache__\\card_display.cpython-39.pyc": {
+      "checksum": "7e48f631d80131cfdfdc7364ffa91328"
+    },
+    "src\\components\\__pycache__\\card_dropdown.cpython-39.pyc": {
+      "checksum": "be18f630388149bb33c360445bf88a99"
+    },
+    "src\\components\\__pycache__\\cards.cpython-39.pyc": {
+      "checksum": "cc081f2ba8012f2dda548895d3c4a53c"
+    },
+    "src\\components\\__pycache__\\centerCoordDropdown.cpython-39.pyc": {
+      "checksum": "2c545022f68a71ea02fb52664fb6e26f"
+    },
+    "src\\components\\__pycache__\\click_display.cpython-39.pyc": {
+      "checksum": "0e9d2bb85541dbf3de99116ef815a053"
+    },
+    "src\\components\\__pycache__\\genOptCard.cpython-38.pyc": {
+      "checksum": "3514eed9a5aad38b71894a0915e83dd0"
+    },
+    "src\\components\\__pycache__\\genOptCard.cpython-39.pyc": {
+      "checksum": "d7bc223e76e79e8f88eab73892bba380"
+    },
+    "src\\components\\__pycache__\\ids.cpython-38.pyc": {
+      "checksum": "37a069d8f848519c92a834ffd9918c6c"
+    },
+    "src\\components\\__pycache__\\ids.cpython-39.pyc": {
+      "checksum": "a7c5c7e03d5e58f6793e37ccc072af11"
+    },
+    "src\\components\\__pycache__\\layout.cpython-38.pyc": {
+      "checksum": "61b5d109290c908ba3294af2a7ca8c10"
+    },
+    "src\\components\\__pycache__\\layout.cpython-39.pyc": {
+      "checksum": "4fc87bece0b5bc2c35e7f152b702e421"
+    },
+    "src\\components\\__pycache__\\map_fig.cpython-38.pyc": {
+      "checksum": "0db5b4166c70b1281444dd8771a5c00c"
+    },
+    "src\\components\\__pycache__\\map_fig.cpython-39.pyc": {
+      "checksum": "931aa183b25e511e3c076e6eeac9da33"
+    },
+    "src\\components\\__pycache__\\nation_dropdown.cpython-39.pyc": {
+      "checksum": "a87e94a30d200a542d4adc79a530be21"
+    },
+    "src\\components\\__pycache__\\sspOptCard.cpython-38.pyc": {
+      "checksum": "c68b9741001d896eeb57e3ec9cbbd9b6"
+    },
+    "src\\components\\__pycache__\\sspOptCard.cpython-39.pyc": {
+      "checksum": "1effab5d256157657affad99edb03a40"
+    },
+    "src\\components\\__pycache__\\ssplot.cpython-38.pyc": {
+      "checksum": "12af29365304440636f92c857b1cf75e"
+    },
+    "src\\components\\__pycache__\\ssplot.cpython-39.pyc": {
+      "checksum": "3a5f651a2c433d79dfdf1d2932c104aa"
+    },
+    "src\\components\\__pycache__\\stats.cpython-39.pyc": {
+      "checksum": "51a1819a27276efab5ab4dfee2934a9b"
+    },
+    "src\\components\\__pycache__\\tabs.cpython-38.pyc": {
+      "checksum": "ca8b3d8dda43752331413295130979ff"
+    },
+    "src\\components\\__pycache__\\tabs.cpython-39.pyc": {
+      "checksum": "14339233f65c6debde775afc270fde71"
+    },
+    "src\\components\\__pycache__\\winodds_chart.cpython-39.pyc": {
+      "checksum": "4801e29f203117c72e214e4b9bfb8de1"
+    },
+    "src\\components\\alerts.py": {
+      "checksum": "13711dc3de079ff54b690eb66a474f80"
+    },
+    "src\\components\\bathOptCard.py": {
+      "checksum": "59e80bb4a202d7cde0668bb79188c664"
+    },
+    "src\\components\\bathplot.py": {
+      "checksum": "445e748b4e802d5b31903b7c8c3bb428"
+    },
+    "src\\components\\custom\\__pycache__\\inputGroups.cpython-38.pyc": {
+      "checksum": "01c1d8e24ed6b22e8b7b0358db4fef76"
+    },
+    "src\\components\\custom\\__pycache__\\inputGroups.cpython-39.pyc": {
+      "checksum": "d6c17bced1273290540c625ab7f47b76"
+    },
+    "src\\components\\custom\\inputGroups.py": {
+      "checksum": "ef2fadeb20ecf3fdae98f9d039ee78e8"
+    },
+    "src\\components\\genOptCard.py": {
+      "checksum": "abf799636311e66b2e48b721494d8f94"
+    },
+    "src\\components\\ids.py": {
+      "checksum": "51c770c8a04b344f89ebc02719b7b4c5"
+    },
+    "src\\components\\layout.py": {
+      "checksum": "85610c5fbfc05891f28fa479b8bace7b"
+    },
+    "src\\components\\map_fig.py": {
+      "checksum": "eaf343ba9f2634807b28a72e34c90864"
+    },
+    "src\\components\\sspOptCard.py": {
+      "checksum": "17a96500838e2e2388661b5dd2eae71a"
+    },
+    "src\\components\\ssplot.py": {
+      "checksum": "aced32eeb021e7b326b37d9865e82019"
+    },
+    "src\\components\\tabs.py": {
+      "checksum": "dbe539b4b273bc4644241536eb294237"
+    },
+    "src\\dataHandling\\__pycache__\\bathretriever.cpython-38.pyc": {
+      "checksum": "aba269fbe24be64989a644b3930935d9"
+    },
+    "src\\dataHandling\\__pycache__\\bathretriever.cpython-39.pyc": {
+      "checksum": "f9619162a3b95b0aa6bfca299a8eb265"
+    },
+    "src\\dataHandling\\__pycache__\\sspretriever.cpython-38.pyc": {
+      "checksum": "0ec45fd2591d3f109fdea7e54c4efe93"
+    },
+    "src\\dataHandling\\__pycache__\\sspretriever.cpython-39.pyc": {
+      "checksum": "7991dc45cd671b9751bcaac4a1c8449a"
+    },
+    "src\\dataHandling\\bathretriever.py": {
+      "checksum": "beaff00013bb00b8498244e80127add6"
+    },
+    "src\\dataHandling\\sspretriever.py": {
+      "checksum": "a8149bdb8b578cea34a266887895b634"
+    }
+  }
+}

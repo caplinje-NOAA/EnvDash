@@ -1,0 +1,12 @@
+[workspace]
+restore_data_on_startup = True
+save_data_on_exit = True
+save_history = True
+save_non_project_files = False
+project_type = 'empty-project-type'
+recent_files = ['main.py', 'src\\components\\map_fig.py', 'src\\components\\layout.py', 'src\\components\\ids.py', 'src\\components\\ssplot.py', 'src\\components\\genOptCard.py', 'src\\components\\bathplot.py', 'src\\components\\bathOptCard.py', 'src\\components\\alerts.py', 'src\\components\\sspOptCard.py', 'src\\components\\tabs.py', 'src\\dataHandling\\bathretriever.py', 'src\\dataHandling\\sspretriever.py']
+
+[main]
+version = 0.2.0
+recent_files = []
+
