@@ -25,11 +25,11 @@ lonInput = dbc.InputGroup(
             className="mb-3",
         )
 
-minInput = dbc.InputGroup(
+boxSizeInput = dbc.InputGroup(
             [
                 dbc.InputGroupText('Bounding Box Size',className='input-group-label'),
-                dbc.Input(type="number",id=ids.BB_MIN,value=60.,max=120.,min=10.),
-                dbc.InputGroupText('minutes'),
+                dbc.Input(type="number",id=ids.BB_KM,value=60.,max=120.,min=10.),
+                dbc.InputGroupText('Radial Kilometers'),
             ],
             className="mb-3",
         )
@@ -52,7 +52,7 @@ card = dbc.Card(
                 html.H4("General Options", className="card-title"),
                 latInput,
                 lonInput,
-                minInput,
+                boxSizeInput,
                 button
                 
                 ,
@@ -79,14 +79,14 @@ def render(app: Dash) -> html.Div:
      State(ids.TABS, 'value'),
      State(ids.LAT_INPUT,'value'),
      State(ids.LON_INPUT,'value'),
-     State(ids.BB_MIN,'value'),
+     State(ids.BB_KM,'value'),
      State(ids.SSP_MONTH_DROPDOWN,'value'),
      State(ids.BATH_SOURCE_DROPDOWN,'value'),
      State(ids.TAB_SPINNER_SECONDARY, "children")],
      prevent_initial_call=True
      
     )
-    def primary_app_callback(n,tab_value,lat,lon,minutes,month,bathsource,secondaryChild):
+    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,secondaryChild):
         """This is the main callback, that is duplicate output of all callbacks that trigger
         a data update.  Gathers all data and updates most content"""
         if n is None:
@@ -102,7 +102,7 @@ def render(app: Dash) -> html.Div:
             else:
                 outSecondaryChild = []
                 
-            fig, mapLayer, alert = renderer[tab_value].render(click_lat_lng,minutes,month,bathsource)
+            fig, mapLayer, alert = renderer[tab_value].render(click_lat_lng,km,month,bathsource)
     
     
             return fig, outSecondaryChild, mapLayer, alert

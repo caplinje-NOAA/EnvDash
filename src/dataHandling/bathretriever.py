@@ -99,12 +99,13 @@ def checkMetaData(metaData:dict):
 #     return r,transect
     
 
-def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., DataSet='SRTM')->bathdata:
+def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
     ## CRM volume information
 
-    metaData = {'lat':Latitude,'lon':Longitude,'minutes':centerOffset_minutes,'source':DataSet}
+    metaData = {'lat':latRange,'lon':lonRange,'source':DataSet}
     exists = checkMetaData(metaData)
-    
+    estLat = np.mean(latRange)
+    estLon = np.mean(lonRange)
 
         
         
@@ -128,7 +129,7 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
               boundedIndex = i
         return boundedIndex
     
-      bounds = boundedBy(Latitude, Longitude)
+      bounds = boundedBy(estLat, estLon)
     
       if bounds==-1:
         error = 'Inputted coordinates are not bounded by any CRM data sets.'
@@ -144,9 +145,7 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
         lonRangeData = [Wbounds[bounds],Ebounds[bounds]]
         latRangeData = [Sbounds[bounds],Nbounds[bounds]]
         # define box offset to grab
-        offset = centerOffset_minutes/60.0
-        lonRange = [Longitude-offset,Longitude+offset]
-        latRange = [Latitude-offset,Latitude+offset]
+
         # test if range is outside of dataset and set bounds accordingly if so
         if lonRange[0]<lonRangeData[0]:
           lonRange[0] = lonRangeData[0]
@@ -171,9 +170,7 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
     
     # define box offset to grab
 
-    offset = centerOffset_minutes/60.0
-    lonRange = [Longitude-offset,Longitude+offset]
-    latRange = [Latitude-offset,Latitude+offset]
+
     # test if range is outside of dataset and set bounds accordingly if so
     if lonRange[0]<lonRangeData[0]:
       lonRange[0] = lonRangeData[0]
@@ -186,7 +183,7 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
       latRange[1] = latRangeData[1]
     
     if exists:
-        print(f'Succesfully loaded bathymetry data near ({Latitude:.3f},{Longitude:.3f}) from local storage.')
+        print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from local storage.')
         return loadData(savePath, structname, variable)
     
     import urllib.request
@@ -202,7 +199,7 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
     print('http returned')
     data = loadData(savePath, structname, variable)
     
-    print(f'Succesfully loaded bathymetry data near ({Latitude:.3f},{Longitude:.3f}) from ERDDAP server.')
+    print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from ERDDAP server.')
     return data
 
 def retrieveTransect(bathdata,sLat,sLon,eLat,eLon, method='interpolate'):
@@ -250,18 +247,9 @@ def retrieveTransect(bathdata,sLat,sLon,eLat,eLon, method='interpolate'):
     return r, transect
 
 
-def getEndCoord(sLat,sLon,az,minutes):
+def getEndCoord(sLat,sLon,az,km):
     
-    offset = minutes/60.0
-    cornerLat = sLat+offset
-    cornerLon = sLon+offset
-    
-    eastDist = geod.line_length([sLon,cornerLon],[sLat,sLat])
-    northDist = geod.line_length([sLon,sLon],[sLat,cornerLat])
-    
-    dist = np.min([eastDist,northDist])
-    
-    print(f'radial distance = {dist:.1f} m')
+    dist = km*1000.0
     
     eLon, eLat, back = geod.fwd(sLon,sLat,az,dist)
     

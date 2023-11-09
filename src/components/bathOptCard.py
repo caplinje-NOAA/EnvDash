@@ -14,6 +14,7 @@ import numpy as np
 
 from . import ids
 from ..dataHandling.bathretriever import retrieve, retrieveTransect, getEndCoord
+from ..dataHandling.geoTools import getBoundingBox
 from .custom import inputGroups as ig
 
 
@@ -196,7 +197,7 @@ def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
                 
             if transectType ==singleAz_txt:
                 sLat, sLon = inputs['lat-start'],inputs['lon-start']
-                eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['minutes'])
+                eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['km'])
                 
                 r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
                 fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
@@ -215,7 +216,7 @@ def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
                 fig = px.line()
                 mapLayers = []
                 for i,azVal in enumerate(az):
-                    eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['minutes'])
+                    eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
                     r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
                     fig.add_trace(px.line(x=r,y=transect).data[0])
                     mapLayers.append(drawMapLayer([sLat,sLon], [eLat,eLon]))
@@ -243,19 +244,22 @@ def render(app: Dash) -> html.Div:
         State({'type':ids.TRANSECT_INPUT,'parameter':ALL},'id'),
         State(ids.LAT_INPUT,'value'),
         State(ids.LON_INPUT,'value'),
-        State(ids.BB_MIN,'value'),
+        State(ids.BB_KM,'value'),
         State(ids.BATH_SOURCE_DROPDOWN,'value'),
       
         )
-    def plot_transects(n,transectType,parameterValues,parameterIDs,lat_pnt,lon_pnt,minutes,bathsource):
+    def plot_transects(n,transectType,parameterValues,parameterIDs,lat_pnt,lon_pnt,km,bathsource):
         if n:
             # get bath data
-            minutes = minutes/2
-            bathdata = retrieve(lat_pnt,lon_pnt,centerOffset_minutes=minutes,DataSet=bathsource)
+            BB = getBoundingBox(lat_pnt, lon_pnt, km)
+            lonRange = [BB.eLon,BB.wLon]
+            latRange = [BB.sLat,BB.nLat]
+            print('Getting Bath Data')
+            bathdata = retrieve(latRange,lonRange,DataSet=bathsource)
             
             # convert list inputs to dictionary
             inputs = buildInputDict(parameterIDs,parameterValues,'parameter')
-            inputs['minutes']=minutes
+            inputs['km']=km
             
             figure,mapLayers = retrieveFigure(bathdata, transectType, inputs)
         

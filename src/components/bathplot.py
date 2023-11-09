@@ -11,21 +11,23 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 import dash_leaflet as dl
 from ..dataHandling.bathretriever import retrieve
+from ..dataHandling.geoTools import getBoundingBox
 from . import ids, alerts
 import time
 
 
 
 
-def render(click_lat_lng,minutes,month,bathsource):
+def render(click_lat_lng,km,month,bathsource):
 
     lat_pnt = click_lat_lng[0]
     lon_pnt = click_lat_lng[1]
-    minutes = minutes/2
-    lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
-    latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
+    BB = getBoundingBox(lat_pnt, lon_pnt, km)
+    lonRange = [BB.eLon,BB.wLon]
+    print(lonRange)
+    latRange = [BB.sLat,BB.nLat]
     print('Getting Bath Data')
-    bathdata = retrieve(lat_pnt,lon_pnt,centerOffset_minutes=minutes,DataSet=bathsource)
+    bathdata = retrieve(latRange,lonRange,DataSet=bathsource)
     print(bathdata.error)
     mapLayers = [dl.Rectangle(bounds=[[latRange[1], lonRange[1]], [latRange[0], lonRange[0]]],children=dl.Tooltip("Bounding box for bathymetry")),
                  dl.Marker(position=click_lat_lng, children=dl.Tooltip("(Center, {:.3f}, {:.3f})".format(*click_lat_lng)))]
@@ -48,7 +50,13 @@ def render(click_lat_lng,minutes,month,bathsource):
             ))
         fig.update_layout(title=f'{bathsource} bathymetry Contour near [{click_lat_lng[0]:.3f},{click_lat_lng[1]:.3f}]',
                    xaxis_title='Longitude (degrees E)',
-                   yaxis_title='Latitude (degrees N)',yaxis = dict(scaleanchor = 'x'),xaxis = dict(scaleanchor = 'y'))
+                   yaxis_title='Latitude (degrees N)',
+                   autosize=True,
+                   margin=dict(b=200, t=50, l=50, r=50),
+                 
+                   #width = 500,
+                   #height = 500)
+                   )
         
         figure = dcc.Graph(figure=fig,style={'width': '60vh', 'height': '60vh'},id=ids.BATH_PLOT)
         

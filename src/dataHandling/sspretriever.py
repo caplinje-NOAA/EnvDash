@@ -20,6 +20,7 @@ savePrefix = f'{dataPath}woadata'
 saveSuffix ='.netcdf'
 
 
+## These strings are necessary to request the correct files from the ERDAP server
 basetimes = ['1986-01-15T17:26:17.131Z','1986-02-15T03:55:20.963Z','1986-03-17T14:24:24.794Z','1986-04-17T00:53:28.625Z',
              '1986-05-17T11:22:32.456Z','1986-06-16T21:51:36.287Z','1986-07-17T08:20:40.119Z','1986-08-16T18:49:43.950Z',
              '1986-09-16T05:18:47.781Z','1986-10-16T15:47:51.612Z','1986-11-16T02:16:55.444Z','1986-12-16T12:45:59.275Z']
@@ -57,6 +58,7 @@ def ds_to_df(ds:xr.Dataset)->pd.DataFrame:
     
              
 def getWOAdata(variable,statistic,month,lonRange,latRange):
+    """download single variable file"""
     metaData = {'var':variable,'stat':statistic,'month':month,'lon':lonRange,'lat':latRange}
     pkl_path =f'{dataPath}sspmetadata_{variable[0]}.pkl'
     exists = checkMetaData(metaData,pkl_path)
@@ -71,7 +73,7 @@ def getWOAdata(variable,statistic,month,lonRange,latRange):
         return True
     basetime = basetimes[int(month)-1].replace(':','%3A')
      
-    query = f'?var={var}&north={latRange[1]:.5f}&west={lonRange[0]:.5f}&east={lonRange[1]:.5f}&south={latRange[0]:.5f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'
+    query = f'?var={var}&north={latRange[1]:.3f}&west={lonRange[0]:.3f}&east={lonRange[1]:.3f}&south={latRange[0]:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'
     
     fullurl = f'{host}{filename}{query}'
      

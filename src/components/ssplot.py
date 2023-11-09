@@ -16,6 +16,7 @@ import dash_leaflet as dl
 import pandas as pd
 
 from ..dataHandling.sspretriever import retrieveSSprofiles
+from ..dataHandling.geoTools import getBoundingBox
 from . import ids, alerts
 
 
@@ -47,19 +48,22 @@ def buildMapMarkers(df):
             
     
 
-def render(click_lat_lng,minutes,month,bathsource):
+def render(click_lat_lng,km,month,bathsource):
     
-
+    minutes = 60
         
     # click_lat_lng just became the generic name for center coord, unpack    
     lat_pnt = click_lat_lng[0]
     lon_pnt = click_lat_lng[1]
     
     # construct bounding box
-    minutes = minutes/2
-    lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
-    latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
-    
+    BB = getBoundingBox(lat_pnt, lon_pnt, km)
+    lonRange = [BB.wLon,BB.eLon]
+    latRange = [BB.sLat,BB.nLat]
+    # lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
+    # latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
+    # print(lonRange)
+    # print(latRange)
     
     df = retrieveSSprofiles(lonRange,latRange,Month=month,as_DataFrame=True)
    
