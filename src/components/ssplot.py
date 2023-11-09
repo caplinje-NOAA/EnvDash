@@ -15,7 +15,7 @@ import numpy as np
 import dash_leaflet as dl
 import pandas as pd
 
-from ..dataHandling.sspretriever import retrieveSSprofiles,getWOAgrid, toDataFrame
+from ..dataHandling.sspretriever import retrieveSSprofiles
 from . import ids, alerts
 
 
@@ -51,12 +51,16 @@ def render(click_lat_lng,minutes,month,bathsource):
     
 
         
-        
+    # click_lat_lng just became the generic name for center coord, unpack    
     lat_pnt = click_lat_lng[0]
     lon_pnt = click_lat_lng[1]
+    
+    # construct bounding box
     minutes = minutes/2
     lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
     latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
+    
+    
     df = retrieveSSprofiles(lonRange,latRange,Month=month,as_DataFrame=True)
    
     #[gridLon,gridLat] = getWOAgrid(df)
@@ -80,6 +84,8 @@ def render(click_lat_lng,minutes,month,bathsource):
     
     return figure, mapLayers, alert
 
+
+# legacy callback
 # def render(app: Dash) -> html.Div:
 #     # @app.callback(
 #     #     Output(ids.BATH_PLOT, "children"),

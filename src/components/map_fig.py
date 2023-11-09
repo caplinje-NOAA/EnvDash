@@ -5,44 +5,38 @@ Created on Sun May  7 08:39:35 2023
 @author: jim
 """
 
-import plotly.express as px
-from dash import Dash, dcc, html, callback, ALL, MATCH
+
+from dash import Dash, html, callback
 from dash.dependencies import Input, Output,State
 import dash_leaflet as dl
-import pandas as pd
-from . import ids, bathplot, ssplot
 
-us_cities = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/us-cities-top-1k.csv")
-
-renderer = {'bath-tab':bathplot,'ssp-tab':ssplot,'seabed-tab':None}
+from . import ids
 
 
+
+
+
+# render the map
 def render(app: Dash) -> html.Div:
 
-
-
-
-
-
     @callback(
-    Output(ids.TABS,'value'),
+    Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True),
     Output(ids.LAT_INPUT,'value'),
     Output(ids.LON_INPUT,'value'),
     Output(ids.LAT_INPUT_START, "value"),
     Output(ids.LON_INPUT_START, "value"),
 
     [Input(ids.MAP_FIG, "clickData"),
-    State(ids.TABS, 'value')],
-   
+    State(ids.GET_DATA_BUTTON, "n_clicks")],
+    prevent_initial_call=True
     )
-    def update_figure(click,value):
+    def click_event_callback(click,n):
+        """ On click event, update lat/lon inputs and trigger tab even"""
     
         lat = click['latlng']['lat']
         lng = click['latlng']['lng']
 
-
-
-        return value,lat,lng,lat,lng
+        return n+1,lat,lng,lat,lng
     
     
 

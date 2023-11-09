@@ -31,12 +31,12 @@ monthDropdown = html.Div(
     ]
 )
 
-includeDropdown = html.Div(
-    [
-        dcc.Dropdown(['none'], 'none', id=ids.SSP_EXCLUDE_DROPDOWN, multi=True),
+# includeDropdown = html.Div(
+#     [
+#         dcc.Dropdown(['none'], 'none', id=ids.SSP_EXCLUDE_DROPDOWN, multi=True),
        
-    ]
-)
+#     ]
+# )
 # coniguration card to open canvas and display current configuration
 card = dbc.Card(
     [
@@ -47,7 +47,7 @@ card = dbc.Card(
                 html.H6("Month:", className="card-title"),
                 monthDropdown,
                 html.H6("Excluded Points:", className="card-title"),
-                includeDropdown
+                #includeDropdown
                 #dbc.Toast(html.H6(id=ids.BATH_ERROR),header="Data Status:")
 
                 
@@ -65,22 +65,17 @@ card = dbc.Card(
 
 def render(app: Dash) -> html.Div:
     
-    # @callback(
-    #     Output({'type':ids.WOA_DATA_MARKER,"location":ALL},'color'),
+    @callback(
+        Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True), 
         
-    #     [Input(ids.SSP_INCLUDE_DROPDOWN,'value'),
-    #      State({'type':ids.WOA_DATA_MARKER,"location":ALL},'id')
-    #      ]
-    #     )
-    # def showIncludedMarkerse(included,markerIds):
-    #     colors = []
-    #     for markerID in markerIds:
-    #         if markerID['location'] in included:
-    #             colors.append('blue')
-    #         else:
-    #             colors.append('red')
+        [Input(ids.SSP_MONTH_DROPDOWN,'value'),
+        State(ids.GET_DATA_BUTTON, "n_clicks")],
+        prevent_initial_call=True
+        )
+    def update_month(value,n):
+
                 
-    #     return colors
+        return n+1
 
     return html.Div(
         [

@@ -14,17 +14,21 @@ def create_layout(app: Dash) -> html.Div:
             html.Hr(),
   
             html.Div([dbc.Row([
+                            # Left hand side
                             dbc.Col([
+                                # Options Row
                                 dbc.Row([
+                                    
                                     dbc.Col(html.Div(genOptCard.render(app),className="app-div"))
-                                    ]),                                          
+                                    ]),  
+                                # Map Row                                        
                                 dbc.Row([                                    
                                     dbc.Col(html.Div(map_fig.render(app),className="app-div"))
                                     ]),
                             
                                 
                                 ],width=5),
-
+                            # tab column    
                             dbc.Col(tabs.render(app))
                             ]),
            

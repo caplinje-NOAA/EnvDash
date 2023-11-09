@@ -6,7 +6,7 @@ from src.components.layout import create_layout
 
 
 app = Dash(external_stylesheets=[CERULEAN],prevent_initial_callbacks=True)
-app.title = "Acoustic Environment Explorer"
+app.title = "Acoustic Modeling Environment Explorer"
 app.layout = create_layout(app)
 app.config.suppress_callback_exceptions = True
 
