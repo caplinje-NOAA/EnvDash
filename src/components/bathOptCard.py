@@ -7,13 +7,15 @@ Created on Fri Sep 22 14:38:11 2023
 
 from dash import Dash, dcc, html,State
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, ALL
 import dash_leaflet as dl
 import plotly.express as px
+import numpy as np
 
 from . import ids
 from ..dataHandling.bathretriever import retrieve, retrieveTransect, getEndCoord
 from .custom import inputGroups as ig
+
 
 ## Input groups for transects
 latInputStart = ig.inputGroup('Start Latitude', 'degrees N', ids.LAT_INPUT_START)
@@ -39,7 +41,8 @@ transectOptsDropdown = html.Div(
     ]
 )
 
-plotTransectButtonS = dbc.Button(
+
+plotTransectButton = dbc.Button(
      "Plot",
      id=ids.PLOT_TRANSECTS_BUTTON_S,
      className="dropdown-button",
@@ -47,21 +50,7 @@ plotTransectButtonS = dbc.Button(
      n_clicks=0,
  )
 
-plotTransectButtonS_AZ = dbc.Button(
-     "Plot",
-     id=ids.PLOT_TRANSECTS_BUTTON_S_AZ,
-     className="dropdown-button",
-     color="primary",
-     n_clicks=0,
- )
 
-plotTransectButtonM = dbc.Button(
-     "Plot",
-     id=ids.PLOT_TRANSECTS_BUTTON_M,
-     className="dropdown-button",
-     color="primary",
-     n_clicks=0,
- )
 # inputs for single transect options
 singleCoordOpts = html.Div(
     [
@@ -77,7 +66,7 @@ singleCoordOpts = html.Div(
                     
                 ]
             ),
-        plotTransectButtonS
+        plotTransectButton
     ]
 ) 
 
@@ -96,7 +85,7 @@ singleCoordOpts_az = html.Div(
                         
                 ]
             ),
-        plotTransectButtonS_AZ
+        plotTransectButton
     ]
 ) 
 
@@ -111,11 +100,11 @@ MultiTransectOpts = html.Div(
             ),
         dbc.Row(   [ 
                         dbc.Col(lonInputStart),
-                        dbc.Col()
+                        dbc.Col(radialInput)
                         
                 ]
             ),
-        plotTransectButtonM
+        plotTransectButton
     ]
 ) 
 
@@ -178,87 +167,124 @@ def drawMapLayer(startLatLon, endLatLon):
     return dl.Polyline(positions=[startLatLon,endLatLon],color='red')
 
 
+def buildInputDict(ids:[dict],values:[],key)->dict:
+    """builds a dictionary for flexible inputs from pattern matching callbacks.
+    ids are a list of dictionary component ids, values are their stored value, and key
+    is the key from the id dictionary to be used in the new dictionary as the key for each 
+    element"""
+    inputs = {}
+    for _id,value in zip(ids,values):
+        inputs[_id[key]]=value
+        
+        
+    return inputs
+
+def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
+            if transectType == single_txt:
+                print(inputs)
+                sLat, sLon = inputs['lat-start'],inputs['lon-start']
+                eLat, eLon = inputs['lat-end'], inputs['lon-end']
+  
+            
+                r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
+                fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
+               
+       
+                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
+                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))  
+                mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
+                
+            if transectType ==singleAz_txt:
+                sLat, sLon = inputs['lat-start'],inputs['lon-start']
+                eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['minutes'])
+                
+                r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
+                fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
+               
+       
+                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
+                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))  
+                mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
+                
+            if transectType == multiple_txt:
+                sLat, sLon = inputs['lat-start'],inputs['lon-start']
+                # get end coordinate arrays
+                num = int(np.round(360/inputs['radial-step']))
+                az = np.linspace(0,360,num=num)
+           
+                fig = px.line()
+                mapLayers = []
+                for i,azVal in enumerate(az):
+                    eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['minutes'])
+                    r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
+                    fig.add_trace(px.line(x=r,y=transect).data[0])
+                    mapLayers.append(drawMapLayer([sLat,sLon], [eLat,eLon]))
+                    
+                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
+                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))     
+                
+                
+            return figure,mapLayers
+        
+
+    
 
 def render(app: Dash) -> html.Div:
     
     @app.callback(
         
-        Output(ids.TRANS_MAP_LAYER, "children",allow_duplicate=True),
-        Output(ids.TAB_SPINNER_SECONDARY, "children",allow_duplicate=True),
+        Output(ids.TRANS_MAP_LAYER, "children"),
+        Output(ids.TAB_SPINNER_SECONDARY, "children"),
+        
         Input(ids.PLOT_TRANSECTS_BUTTON_S, "n_clicks"),
-        State(ids.LAT_INPUT_START,'value'),
-        State(ids.LON_INPUT_START,'value'),
-        State(ids.LAT_INPUT_END,'value'),
-        State(ids.LON_INPUT_END,'value'),
-        State(ids.MAP_FIG, "click_lat_lng"),
+        
+        State(ids.TRANSECT_DROPDOWN, "value"),
+        State({'type':ids.TRANSECT_INPUT,"parameter":ALL},'value'),
+        State({'type':ids.TRANSECT_INPUT,'parameter':ALL},'id'),
+        State(ids.LAT_INPUT,'value'),
+        State(ids.LON_INPUT,'value'),
         State(ids.BB_MIN,'value'),
         State(ids.BATH_SOURCE_DROPDOWN,'value'),
-       
-        prevent_initial_call=True
+      
         )
-    def plot_transects1(n,sLat,sLon,eLat,eLon,click_lat_lng,minutes,bathsource):
+    def plot_transects(n,transectType,parameterValues,parameterIDs,lat_pnt,lon_pnt,minutes,bathsource):
         if n:
-            lat_pnt = click_lat_lng[0]
-            lon_pnt = click_lat_lng[1]
+            # get bath data
             minutes = minutes/2
             bathdata = retrieve(lat_pnt,lon_pnt,centerOffset_minutes=minutes,DataSet=bathsource)
             
-            r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
-            fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
-           
-   
-            fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-            figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))         
-
-            return drawMapLayer([sLat,sLon], [eLat,eLon]),figure
-        return [],[]
-    
-    @app.callback(
-        
-        Output(ids.TRANS_MAP_LAYER, "children",allow_duplicate=True),
-        Output(ids.TAB_SPINNER_SECONDARY, "children",allow_duplicate=True),
-        Input(ids.PLOT_TRANSECTS_BUTTON_S_AZ, "n_clicks"),
-        State(ids.LAT_INPUT_START,'value'),
-        State(ids.LON_INPUT_START,'value'),
-        State(ids.AZ_INPUT,'value'),
-        State(ids.MAP_FIG, "click_lat_lng"),
-        State(ids.BB_MIN,'value'),
-        State(ids.BATH_SOURCE_DROPDOWN,'value'),
-        
-        prevent_initial_call=True
-        )
-    def plot_transects2(n,sLat,sLon,az,click_lat_lng,minutes,bathsource):
-        if n:
-            lat_pnt = click_lat_lng[0]
-            lon_pnt = click_lat_lng[1]
-            minutes = minutes/2
-            bathdata = retrieve(lat_pnt,lon_pnt,centerOffset_minutes=minutes,DataSet=bathsource)
-   
+            # convert list inputs to dictionary
+            inputs = buildInputDict(parameterIDs,parameterValues,'parameter')
+            inputs['minutes']=minutes
             
-            eLat, eLon = getEndCoord(sLat,sLon,az,minutes)
-            r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
-            fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] projected to az={az:.2f} deg. rel N')
-            fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-            figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))         
+            figure,mapLayers = retrieveFigure(bathdata, transectType, inputs)
+        
 
-            return drawMapLayer([sLat,sLon], [eLat,eLon]),figure
+            return mapLayers,figure
         return [],[]
     
+
     
+    ## simple callback to edit which inputs show up for each dropdown choice
+    ## copies starting coordinates so they carry over when new components are created
     @app.callback(
     Output(ids.TRANS_INPUTS_DIV, "children"), 
+    Output(ids.LAT_INPUT_START,"value",allow_duplicate=True),
+    Output(ids.LON_INPUT_START,"value",allow_duplicate=True),
 
     [Input(ids.TRANSECT_DROPDOWN, "value"),
+     State(ids.LAT_INPUT_START,"value"),
+     State(ids.LON_INPUT_START,"value")
      ],
     prevent_initial_call=True
     )
-    def update_inputs(ddvalue):
+    def update_inputs(ddvalue,lat,lon):
         print('dropdown callback')
 
-        return transect_inputs_dict[ddvalue]
+        return transect_inputs_dict[ddvalue],lat,lon
     
     
-
+    # callback to open the collapse
     @app.callback(
     Output(ids.TRANSECT_COLLAPSE, "is_open"),
       

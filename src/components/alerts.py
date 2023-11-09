@@ -31,4 +31,4 @@ def getAlert(color,message):
 def render(app: Dash) -> html.Div:
 
 
-    return dbc.Alert(id=ids.ALERT,is_open=False)
+    return html.Div(id=ids.ALERT)

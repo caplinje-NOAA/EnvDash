@@ -10,7 +10,7 @@ from . import ids,bathplot, ssplot
 latInput = dbc.InputGroup(
             [
                 dbc.InputGroupText('Center Latitude',className='input-group-label'),
-                dbc.Input(type="number",id=ids.LAT_INPUT),
+                dbc.Input(type="number",id=ids.LAT_INPUT,value=41.045),
                 dbc.InputGroupText('degrees N'),
             ],
             className="mb-3",
@@ -19,7 +19,7 @@ latInput = dbc.InputGroup(
 lonInput = dbc.InputGroup(
             [
                 dbc.InputGroupText('Center Longitude',className='input-group-label'),
-                dbc.Input(type="number",id=ids.LON_INPUT),
+                dbc.Input(type="number",id=ids.LON_INPUT,value=-70.439),
                 dbc.InputGroupText('degrees E'),
             ],
             className="mb-3",

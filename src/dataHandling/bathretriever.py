@@ -12,10 +12,13 @@ from dataclasses import dataclass
 import scipy.io
 import scipy.ndimage as snd
 from pyproj import Geod
+import pickle
 
 
 geod = Geod(ellps="WGS84")
-
+dataPath = 'data/temp/'
+savePath = f'{dataPath}bathdata.mat'
+metaDataPath =f'{dataPath}bathmetadata.pkl'
 
 @dataclass
 class bathdata:
@@ -38,6 +41,26 @@ def loadData(path,structname,variable,landMask=10.0):
     
     
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
+
+def checkMetaData(metaData:dict):
+    exists=False
+    try:
+        with open(metaDataPath,'rb') as f:
+            existing = pickle.load(f)
+     
+    except FileNotFoundError:
+        existing={}
+        
+    if existing==metaData:
+        exists=True
+    else:
+        with open(metaDataPath,'wb+') as f:
+            pickle.dump(metaData, f)
+            
+    return exists
+        
+        
+        
 
 # def retrieveTransect(bathdata,sLat,sLon,eLat,eLon):
     
@@ -78,10 +101,9 @@ def loadData(path,structname,variable,landMask=10.0):
 
 def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., DataSet='SRTM')->bathdata:
     ## CRM volume information
-    uid = int(np.abs(Latitude*Longitude*centerOffset_minutes*10))
-    saveFile = f'{DataSet}{uid}.mat'
-    dataPath = 'data/temp/'
-    savePath = f'{dataPath}{saveFile}'
+
+    metaData = {'lat':Latitude,'lon':Longitude,'minutes':centerOffset_minutes,'source':DataSet}
+    exists = checkMetaData(metaData)
     
 
         
@@ -163,8 +185,8 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
     if latRange[1]>latRangeData[1]:
       latRange[1] = latRangeData[1]
     
-    if os.path.isfile(savePath):
-        print(f'Succesfully loaded bathymetry data ({saveFile}) near ({Latitude:.3f},{Longitude:.3f}) from local storage.')
+    if exists:
+        print(f'Succesfully loaded bathymetry data near ({Latitude:.3f},{Longitude:.3f}) from local storage.')
         return loadData(savePath, structname, variable)
     
     import urllib.request
@@ -172,14 +194,15 @@ def retrieve(Latitude:float, Longitude:float, centerOffset_minutes:float=30., Da
     
     query = f'?{variable}%5B({latRange[1]}):1:({latRange[0]})%5D%5B({lonRange[0]}):1:({lonRange[1]})%5D'
     fullurl = f'{host}{filename}{query}'
+    print('attempting request')
     try:
         req = urllib.request.urlretrieve(fullurl, savePath)
     except urlerror.HTTPError:
         return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable.')
-    
+    print('http returned')
     data = loadData(savePath, structname, variable)
     
-    print(f'Succesfully loaded bathymetry data ({saveFile}) near ({Latitude:.3f},{Longitude:.3f}) from ERDDAP server.')
+    print(f'Succesfully loaded bathymetry data near ({Latitude:.3f},{Longitude:.3f}) from ERDDAP server.')
     return data
 
 def retrieveTransect(bathdata,sLat,sLon,eLat,eLon, method='interpolate'):

@@ -24,7 +24,9 @@ def render(click_lat_lng,minutes,month,bathsource):
     minutes = minutes/2
     lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
     latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
+    print('Getting Bath Data')
     bathdata = retrieve(lat_pnt,lon_pnt,centerOffset_minutes=minutes,DataSet=bathsource)
+    print(bathdata.error)
     mapLayers = [dl.Rectangle(bounds=[[latRange[1], lonRange[1]], [latRange[0], lonRange[0]]],children=dl.Tooltip("Bounding box for bathymetry")),
                  dl.Marker(position=click_lat_lng, children=dl.Tooltip("(Center, {:.3f}, {:.3f})".format(*click_lat_lng)))]
     
