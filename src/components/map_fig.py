@@ -23,8 +23,7 @@ def render(app: Dash) -> html.Div:
     Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True),
     Output(ids.LAT_INPUT,'value'),
     Output(ids.LON_INPUT,'value'),
-    Output(ids.LAT_INPUT_START, "value"),
-    Output(ids.LON_INPUT_START, "value"),
+
 
     [Input(ids.MAP_FIG, "clickData"),
     State(ids.GET_DATA_BUTTON, "n_clicks")],
@@ -36,7 +35,7 @@ def render(app: Dash) -> html.Div:
         lat = click['latlng']['lat']
         lng = click['latlng']['lng']
 
-        return n+1,lat,lng,lat,lng
+        return n+1,lat,lng
     
     
 

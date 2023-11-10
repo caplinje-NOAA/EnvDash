@@ -28,8 +28,8 @@ spinnerSecondary =        dcc.Loading(
                 )
 
 # container for all figures (bottom section of tabs, width sets ratio (out of 12))
-tabContent = dbc.Row([dbc.Col(spinner,width=7,id=ids.PRIMARY_FIGURE_COLUMN),
-                      dbc.Col(spinnerSecondary)])
+tabContent = dbc.Row([dbc.Col(spinner,width='auto',id=ids.PRIMARY_FIGURE_COLUMN),
+                      dbc.Col(spinnerSecondary)],style={'flex-wrap': 'nowrap'})
 
 
 def render(app: Dash) -> html.Div:

@@ -10,10 +10,10 @@ import pickle
 import numpy as np
 import xarray as xr
 import pandas as pd
-Month = "06" 
-Statistic = "mn" 
 
 import urllib.request
+
+from .metaDataHandling import metaDataHandler
 
 dataPath = 'data//temp//'
 savePrefix = f'{dataPath}woadata'
@@ -28,24 +28,8 @@ basetimes = ['1986-01-15T17:26:17.131Z','1986-02-15T03:55:20.963Z','1986-03-17T1
 monthDict = {'January':'01','February':'02','March':'03','April':'04','May':'05','June':'06','July':'07','August':'08','September':'09','October':'10','November':'11','December':'12'}
 
 
-def checkMetaData(metaData:dict,pkl_path):
-    """this function maintains a pickled dictionary containing metadata
-    If the existing dictionary matches the input, it returns True"""
-    exists=False
-    try:
-        with open(pkl_path,'rb') as f:
-            existing = pickle.load(f)
-     
-    except FileNotFoundError:
-        existing={}
-        
-    if existing==metaData:
-        exists=True
-    else:
-        with open(pkl_path,'wb+') as f:
-            pickle.dump(metaData, f)
-            
-    return exists
+metaData = {'temperature':metaDataHandler('sspt'),'salinity':metaDataHandler('ssps')}
+
 
 def ds_to_df(ds:xr.Dataset)->pd.DataFrame:
     df = pd.DataFrame(columns=['depth'],data=np.array(ds.depth))
@@ -59,9 +43,11 @@ def ds_to_df(ds:xr.Dataset)->pd.DataFrame:
              
 def getWOAdata(variable,statistic,month,lonRange,latRange):
     """download single variable file"""
-    metaData = {'var':variable,'stat':statistic,'month':month,'lon':lonRange,'lat':latRange}
-    pkl_path =f'{dataPath}sspmetadata_{variable[0]}.pkl'
-    exists = checkMetaData(metaData,pkl_path)
+    # check local storage for requested data
+    reqMetaData = {'var':variable,'stat':statistic,'month':month,'lon':lonRange,'lat':latRange}
+    exists = metaData[variable].isMatch(reqMetaData)
+    
+    
     host = f'https://www.ncei.noaa.gov/thredds-ocean/ncss/ncei/woa/{variable}/decav/0.25/'
     filename = f'woa18_decav_{variable[0]}{month}_04.nc'
     var = f'{variable[0]}_{statistic}'
@@ -69,7 +55,7 @@ def getWOAdata(variable,statistic,month,lonRange,latRange):
  
     
     if exists:
-        print('local woa data used')
+        print('Attempting to use local WOA data.')
         return True
     basetime = basetimes[int(month)-1].replace(':','%3A')
      
@@ -78,7 +64,8 @@ def getWOAdata(variable,statistic,month,lonRange,latRange):
     fullurl = f'{host}{filename}{query}'
      
     req = urllib.request.urlretrieve(fullurl, savePath)
-     
+    metaData[variable].writeMetaData(reqMetaData)
+    
     return req
 
 def getWOAgrid(dataset):

@@ -4,8 +4,9 @@ Created on Sun May  7 11:49:56 2023
 
 @author: jim
 """
-import os.path
-
+#import os.path
+import urllib.request
+import urllib.error as urlerror
 
 import numpy as np
 from dataclasses import dataclass
@@ -15,10 +16,12 @@ from pyproj import Geod
 import pickle
 
 
+from .metaDataHandling import metaDataHandler
+
 geod = Geod(ellps="WGS84")
 dataPath = 'data/temp/'
 savePath = f'{dataPath}bathdata.mat'
-metaDataPath =f'{dataPath}bathmetadata.pkl'
+metaDataName ='bath'
 
 @dataclass
 class bathdata:
@@ -42,72 +45,22 @@ def loadData(path,structname,variable,landMask=10.0):
     
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
 
-def checkMetaData(metaData:dict):
-    exists=False
-    try:
-        with open(metaDataPath,'rb') as f:
-            existing = pickle.load(f)
-     
-    except FileNotFoundError:
-        existing={}
+          
+    
         
-    if existing==metaData:
-        exists=True
-    else:
-        with open(metaDataPath,'wb+') as f:
-            pickle.dump(metaData, f)
-            
-    return exists
+metaData = metaDataHandler('bath')        
         
-        
-        
-
-# def retrieveTransect(bathdata,sLat,sLon,eLat,eLon):
-    
-#     def toPixel(coord_latlon):
-#         latPixel = np.argmin(np.abs(coord_latlon[0]-bathdata.lat))
-#         lonPixel = np.argmin(np.abs(coord_latlon[1]-bathdata.lon))
-#         return [latPixel,lonPixel]
-    
-#     startCoord = [sLat,sLon]
-#     endCoord = [eLat,eLon]
-    
-#     # convert to pixel coords
-#     startPixelCoord = toPixel(startCoord)
-#     endPixelCoord = toPixel(startCoord)
-    
-#     transLenPixels = int(np.hypot(startPixelCoord[0]-endPixelCoord[0],startPixelCoord[1]-endPixelCoord[1]))
-    
-    
-#     # define x dimension as longitude, in pixel coordinates ..... y ... latitude ....
-    
-#     x = np.linspace(startPixelCoord[1],endPixelCoord[1],num=transLenPixels).astype(int)
-#     print(x)
-#     y = np.linspace(startPixelCoord[0],endPixelCoord[0],num=transLenPixels).astype(int)
-    
-
-#     transect = bathdata.topo[y,x]
-#     lat = bathdata.lat[y]
-#     lon = bathdata.lon[x]
-    
-    
-#     r = np.zeros_like(transect)
-    
-#     for i,(lonVal,latVal) in enumerate(zip(lon,lat)):
-#         r[i] = geod.line_length([startCoord[1],lonVal],[startCoord[0],latVal])
-        
-#     return r,transect
-    
+   
 
 def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
     ## CRM volume information
-
-    metaData = {'lat':latRange,'lon':lonRange,'source':DataSet}
-    exists = checkMetaData(metaData)
+    # estimated center lat/lon 
     estLat = np.mean(latRange)
     estLon = np.mean(lonRange)
-
-        
+    
+    reqMetaData = {'lat':latRange,'lon':lonRange,'source':DataSet}
+    exists = metaData.isMatch(reqMetaData)
+           
         
     
     if DataSet=='CRM':
@@ -186,19 +139,19 @@ def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
         print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from local storage.')
         return loadData(savePath, structname, variable)
     
-    import urllib.request
-    import urllib.error as urlerror
+
     
-    query = f'?{variable}%5B({latRange[1]}):1:({latRange[0]})%5D%5B({lonRange[0]}):1:({lonRange[1]})%5D'
+    query = f'?{variable}%5B({latRange[1]:.4f}):1:({latRange[0]:.4f})%5D%5B({lonRange[0]:.4f}):1:({lonRange[1]:.4f})%5D'
     fullurl = f'{host}{filename}{query}'
     print('attempting request')
     try:
+        print(fullurl)
         req = urllib.request.urlretrieve(fullurl, savePath)
     except urlerror.HTTPError:
         return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable.')
-    print('http returned')
+    print(f'http returned {req}')
     data = loadData(savePath, structname, variable)
-    
+    metaData.writeMetaData(reqMetaData)
     print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from ERDDAP server.')
     return data
 

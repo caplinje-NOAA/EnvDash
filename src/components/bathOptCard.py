@@ -192,7 +192,7 @@ def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
                
        
                 fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))  
+           
                 mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
                 
             if transectType ==singleAz_txt:
@@ -204,7 +204,7 @@ def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
                
        
                 fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))  
+               
                 mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
                 
             if transectType == multiple_txt:
@@ -221,10 +221,10 @@ def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
                     fig.add_trace(px.line(x=r,y=transect).data[0])
                     mapLayers.append(drawMapLayer([sLat,sLon], [eLat,eLon]))
                     
-                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-                figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))     
+                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)",autosize=True)
+                    
                 
-                
+            figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))    
             return figure,mapLayers
         
 
@@ -291,18 +291,22 @@ def render(app: Dash) -> html.Div:
     # callback to open the collapse
     @app.callback(
     Output(ids.TRANSECT_COLLAPSE, "is_open"),
+    Output(ids.LAT_INPUT_START,"value",allow_duplicate=True),
+    Output(ids.LON_INPUT_START,"value",allow_duplicate=True),
       
     [Input(ids.TRANSECT_COLLAPSE_BUTTON, "n_clicks"),
-     State(ids.TRANSECT_COLLAPSE, "is_open")]
+     State(ids.TRANSECT_COLLAPSE, "is_open"),
+     State(ids.LAT_INPUT,"value"),
+     State(ids.LON_INPUT,"value")]
 
 
     )
-    def toggle_collapse(n, is_open):
+    def toggle_collapse(n, is_open, lat, lon):
         print(f'toggle collapse {n}')
  
         if n:
            
-                return (not is_open)
+                return (not is_open), lat, lon
          
                 
         return is_open

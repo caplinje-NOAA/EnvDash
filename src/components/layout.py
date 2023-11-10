@@ -27,10 +27,10 @@ def create_layout(app: Dash) -> html.Div:
                                     ]),
                             
                                 
-                                ],width=5),
+                                ],width=4),
                             # tab column    
                             dbc.Col(tabs.render(app))
-                            ]),
+                            ],style={'flex-wrap': 'nowrap'}),  # nowrap prevents overflow caused by large-width figures
            
                         html.Div(alerts.render(app)),
                         
