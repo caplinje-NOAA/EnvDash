@@ -1,9 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun May  7 08:39:35 2023
+The general options (top-left card) components and primary callback of the app
+@author: jim
+"""
 
+# dash imports
 from dash import Dash, html,State
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
-
+# project imports
 from . import ids,bathplot, ssplot
 
 
@@ -63,7 +70,7 @@ card = dbc.Card(
     style={"width": "100%"},
 )
 
-# dictionary container render methods
+# dictionary container of render methods for each tab
 renderer = {'bath-tab':bathplot,'ssp-tab':ssplot,'seabed-tab':None}
 
 
@@ -87,7 +94,7 @@ def render(app: Dash) -> html.Div:
      
     )
     def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,secondaryChild):
-        """This is the main callback, that is duplicate output of all callbacks that trigger
+        """This is the main callback of the app, being the duplicate output of all callbacks that trigger
         a data update.  Gathers all data and updates most content"""
         if n is None:
             return None

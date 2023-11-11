@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May  7 08:39:35 2023
-
+Handles the leaflet map component
 @author: jim
 """
 

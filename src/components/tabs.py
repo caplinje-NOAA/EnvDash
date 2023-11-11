@@ -4,13 +4,14 @@ Created on Wed Sep 27 13:08:01 2023
 
 @author: jim
 
-Tab layout and callback for primary content
+Tab layout, callback chains to main button on general options card
 """
 
+# dash imports
 from dash import Dash, dcc, html, Input, Output, callback, State
 import dash_bootstrap_components as dbc
 
-
+# project imports
 from . import bathOptCard,ids,sspOptCard
 
 # Container for left figure / object
@@ -29,7 +30,7 @@ spinnerSecondary =        dcc.Loading(
 
 # container for all figures (bottom section of tabs, width sets ratio (out of 12))
 tabContent = dbc.Row([dbc.Col(spinner,width='auto',id=ids.PRIMARY_FIGURE_COLUMN),
-                      dbc.Col(spinnerSecondary)],style={'flex-wrap': 'nowrap'})
+                      dbc.Col(spinnerSecondary)],style={'flex-wrap': 'nowrap'}) # no wrap fixed the overflow issues with wide transect figures
 
 
 def render(app: Dash) -> html.Div:
@@ -41,7 +42,7 @@ def render(app: Dash) -> html.Div:
     prevent_initial_call=True
     )
     def update_tabs(value,n):
-        """Update data if tab changes"""
+        """Update data and tab if tab changes"""
 
         return n+1
     

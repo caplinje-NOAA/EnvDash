@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Sep 22 14:38:11 2023
-
+Bathymetry options card component, also manages transect plotting
 @author: jim
 """
-
+# dash imports
 from dash import Dash, dcc, html,State
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, ALL
-import dash_leaflet as dl
-import plotly.express as px
-import numpy as np
 
-from . import ids
-from ..dataHandling.bathretriever import retrieve, retrieveTransect, getEndCoord
+# project imports
+from . import ids, text
+from .transectPlot import plotTransects
+from ..dataHandling.bathretriever import retrieve
 from ..dataHandling.geoTools import getBoundingBox
 from .custom import inputGroups as ig
 
 
+#### Build Components of card
 ## Input groups for transects
 latInputStart = ig.inputGroup('Start Latitude', 'degrees N', ids.LAT_INPUT_START)
 lonInputStart = ig.inputGroup('Start Longitude', 'degrees E', ids.LON_INPUT_START)
@@ -26,16 +26,13 @@ lonInputEnd = ig.inputGroup('End Longitude', 'degrees E', ids.LON_INPUT_END)
 singleAzInput = ig.inputGroup('Azimuth', 'degrees rel. N', ids.AZ_INPUT)
 radialInput = ig.inputGroup('Radial Step', 'degrees', ids.RADIAL_STEP_INPUT)
 
-# Display text for transect type dropdown options
-single_txt = 'Single transect with start/end coordinates'
-singleAz_txt = 'Single transect with start coord and azimuth'
-multiple_txt = 'mutiple radials'
+
 
 
 # dropdown menu to select transect type
 transectOptsDropdown = html.Div(
     [
-        dcc.Dropdown([single_txt, singleAz_txt, multiple_txt], single_txt, 
+        dcc.Dropdown([text.transect_single, text.transect_singleAz, text.transect_multiple], text.transect_single, 
                      id=ids.TRANSECT_DROPDOWN,
                      className ="mb-3"),
        
@@ -95,13 +92,13 @@ MultiTransectOpts = html.Div(
     [
         dbc.Row(   [ 
                         dbc.Col(latInputStart),
-                        dbc.Col(singleAzInput)
+                        dbc.Col(radialInput)
                     
                 ]
             ),
         dbc.Row(   [ 
                         dbc.Col(lonInputStart),
-                        dbc.Col(radialInput)
+                        dbc.Col()
                         
                 ]
             ),
@@ -110,7 +107,7 @@ MultiTransectOpts = html.Div(
 ) 
 
 # dictionary to define transect options card content
-transect_inputs_dict = {single_txt: singleCoordOpts,singleAz_txt: singleCoordOpts_az, multiple_txt:MultiTransectOpts}
+transect_inputs_dict = {text.transect_single: singleCoordOpts,text.transect_singleAz: singleCoordOpts_az, text.transect_multiple:MultiTransectOpts}
 
 # Button for toggling transect collapse
 collapseButton = dbc.Button(
@@ -164,9 +161,8 @@ card = dbc.Card(
 )
 
 
-def drawMapLayer(startLatLon, endLatLon):
-    return dl.Polyline(positions=[startLatLon,endLatLon],color='red')
 
+#### Callbacks of above components
 
 def buildInputDict(ids:[dict],values:[],key)->dict:
     """builds a dictionary for flexible inputs from pattern matching callbacks.
@@ -180,58 +176,10 @@ def buildInputDict(ids:[dict],values:[],key)->dict:
         
     return inputs
 
-def retrieveFigure(bathdata:np.ndarray,transectType:str,inputs:dict)->html.Div:
-            if transectType == single_txt:
-                print(inputs)
-                sLat, sLon = inputs['lat-start'],inputs['lon-start']
-                eLat, eLon = inputs['lat-end'], inputs['lon-end']
-  
-            
-                r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
-                fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
-               
-       
-                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-           
-                mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
-                
-            if transectType ==singleAz_txt:
-                sLat, sLon = inputs['lat-start'],inputs['lon-start']
-                eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['km'])
-                
-                r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
-                fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
-               
-       
-                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)")
-               
-                mapLayers = drawMapLayer([sLat,sLon], [eLat,eLon])
-                
-            if transectType == multiple_txt:
-                sLat, sLon = inputs['lat-start'],inputs['lon-start']
-                # get end coordinate arrays
-                num = int(np.round(360/inputs['radial-step']))
-                az = np.linspace(0,360,num=num)
-           
-                fig = px.line()
-                mapLayers = []
-                for i,azVal in enumerate(az):
-                    eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
-                    r,transect = retrieveTransect(bathdata, sLat, sLon, eLat, eLon)
-                    fig.add_trace(px.line(x=r,y=transect).data[0])
-                    mapLayers.append(drawMapLayer([sLat,sLon], [eLat,eLon]))
-                    
-                fig.update_layout(xaxis_title="Range (m)", yaxis_title="Depth (m)",autosize=True)
-                    
-                
-            figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))    
-            return figure,mapLayers
-        
-
-    
+         
 
 def render(app: Dash) -> html.Div:
-    
+    ## Plot transect callback
     @app.callback(
         
         Output(ids.TRANS_MAP_LAYER, "children"),
@@ -252,16 +200,16 @@ def render(app: Dash) -> html.Div:
         if n:
             # get bath data
             BB = getBoundingBox(lat_pnt, lon_pnt, km)
-            lonRange = [BB.eLon,BB.wLon]
-            latRange = [BB.sLat,BB.nLat]
+            print(BB)
+ 
             print('Getting Bath Data')
-            bathdata = retrieve(latRange,lonRange,DataSet=bathsource)
+            bathdata = retrieve(BB,DataSet=bathsource)
             
             # convert list inputs to dictionary
             inputs = buildInputDict(parameterIDs,parameterValues,'parameter')
             inputs['km']=km
             
-            figure,mapLayers = retrieveFigure(bathdata, transectType, inputs)
+            figure,mapLayers = plotTransects(bathdata, transectType, inputs)
         
 
             return mapLayers,figure
@@ -283,8 +231,7 @@ def render(app: Dash) -> html.Div:
     prevent_initial_call=True
     )
     def update_inputs(ddvalue,lat,lon):
-        print('dropdown callback')
-
+     
         return transect_inputs_dict[ddvalue],lat,lon
     
     
@@ -302,7 +249,7 @@ def render(app: Dash) -> html.Div:
 
     )
     def toggle_collapse(n, is_open, lat, lon):
-        print(f'toggle collapse {n}')
+      
  
         if n:
            

@@ -1,40 +1,51 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May  7 11:53:59 2023
-
+This module handles the rendering of SSP data
 @author: jim
 """
 
-from dash import Dash, dcc, html, callback
-from dash.dependencies import Input, Output, State, ALL
-import plotly.graph_objects as go
-import plotly.express as px
-import dash_bootstrap_components as dbc
-import xarray as xr
-import numpy as np
-import dash_leaflet as dl
+# dash imports
+from dash import dcc, html
+
+# data science imports
 import pandas as pd
 
+# plotting imports
+import plotly.express as px
+import dash_leaflet as dl
+
+# project imports
 from ..dataHandling.sspretriever import retrieveSSprofiles
-from ..dataHandling.geoTools import getBoundingBox
+from ..dataHandling.geoTools import getBoundingBox, boundingBox
 from . import ids, alerts
 
 
-def decodeCoord(coordstr):
+def decodeCoord(coordstr:str)->[float]:
+    """convert string coordinate [lat,lon] to [float]"""
     stringArray = coordstr.strip('[').strip(']').split(',')
     lat = float(stringArray[0])
     lon = float(stringArray[1])
     return [lat,lon]
 
-def buildFig(df):
-    
-    
+
+def buildFig(df:pd.DataFrame,BB:boundingBox,month:str)->html.Div:   
+    """Builds SSP figure Div"""
    
     fig = px.line(df,x='C',y='depth',color='Coordinate')
-    print(fig['data'][2]['name'])
-    return fig
     
-def buildMapMarkers(df):
+    fig.update_layout(title=f'{month} SSP near [{BB.cLat:.3f},{BB.cLon:.3f}]',
+               xaxis_title='Sound Speed (m/s)',
+               yaxis_title='Depth (m)')
+    
+    fig['layout']['yaxis']['autorange'] = "reversed"
+    
+    figure = html.Div(dcc.Graph(figure=fig,style={'width': '60vh', 'height': '60vh'}, id=ids.SSP_PLOT))
+    
+    return figure
+    
+def buildMapMarkers(df:pd.DataFrame,BB:boundingBox):
+    """builds an array of dl.Circle items of each SSP point"""
     markers = []
     locations = df['Coordinate'].unique()
     for loc in locations:
@@ -44,51 +55,44 @@ def buildMapMarkers(df):
                       id={'type':ids.WOA_DATA_MARKER,'location':loc},color='blue',opacity=1)
                       )
             
-    return markers,locations
-            
+    return markers
+
+def buildMapLayers(df,BB:boundingBox):
+    """combines marker layer with center position marker"""
+    mapLayers = [dl.Marker(position=[BB.cLat,BB.cLon], children=dl.Tooltip(f"Center, [{BB.cLat:.3f}, {BB.cLon:.3f}]"))]
+    markers = buildMapMarkers(df,BB)
+    mapLayers=mapLayers+markers 
+    return mapLayers       
     
 
-def render(click_lat_lng,km,month,bathsource):
-    
-    minutes = 60
-        
-    # click_lat_lng just became the generic name for center coord, unpack    
-    lat_pnt = click_lat_lng[0]
-    lon_pnt = click_lat_lng[1]
-    
+def render(coord_lat_lon,km,month,bathsource):
+    """ Sound speed renderer function in the same template as the other tab content"""   
     # construct bounding box
-    BB = getBoundingBox(lat_pnt, lon_pnt, km)
-    lonRange = [BB.wLon,BB.eLon]
-    latRange = [BB.sLat,BB.nLat]
-    # lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
-    # latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
-    # print(lonRange)
-    # print(latRange)
-    
-    df = retrieveSSprofiles(lonRange,latRange,Month=month,as_DataFrame=True)
+    BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
    
-    #[gridLon,gridLat] = getWOAgrid(df)
-    #nearest = ds.sel(lon=lon_pnt,lat=lat_pnt,method='nearest')
-    #C = np.array(nearest.C)
-    #depth = np.array(nearest.depth)
-    #nonnan = ~np.isnan(C)
-    #C = C[nonnan]
-    #depth = depth[nonnan]
-    fig = buildFig(df)
-    fig.update_layout(title=f'{month} SSP near [{click_lat_lng[0]:.3f},{click_lat_lng[1]:.3f}]',
-               xaxis_title='Sound Speed (m/s)',
-               yaxis_title='Depth (m)')
-    fig['layout']['yaxis']['autorange'] = "reversed"
-    
-    mapLayers = [dl.Marker(position=click_lat_lng, children=dl.Tooltip("(Center, {:.3f}, {:.3f})".format(*click_lat_lng)))]
-    markers,locations = buildMapMarkers(df)
-    mapLayers=mapLayers+markers
+    # get profiles
+    df = retrieveSSprofiles(BB,Month=month,as_DataFrame=True)
+   
+    # figure and layers
+    figure = buildFig(df,BB,month)    
+    mapLayers = buildMapLayers(df,BB)
+  
     alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
-    figure = html.Div(dcc.Graph(figure=fig,style={'width': '60vh', 'height': '60vh'}, id=ids.SSP_PLOT))
+  
     
     return figure, mapLayers, alert
 
 
+## get nearest profile method
+#[gridLon,gridLat] = getWOAgrid(df)
+#nearest = ds.sel(lon=lon_pnt,lat=lat_pnt,method='nearest')
+#C = np.array(nearest.C)
+#depth = np.array(nearest.depth)
+#nonnan = ~np.isnan(C)
+#C = C[nonnan]
+#depth = depth[nonnan]
+    
+    
 # legacy callback
 # def render(app: Dash) -> html.Div:
 #     # @app.callback(

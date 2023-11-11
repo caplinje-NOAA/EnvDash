@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Sep 22 14:38:11 2023
-
+Model for alert components
 @author: jim
 """
 
-from dash import Dash, dcc, html,State
+# dash imports
+
+from dash import Dash, html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
+
 
 
 from . import ids

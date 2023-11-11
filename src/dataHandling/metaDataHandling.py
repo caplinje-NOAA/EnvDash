@@ -5,15 +5,19 @@ Small module for tracking the metadata of local data
 @author: jim
 """
 
+# python imports
 import pickle
 
-tempPath = 'data/temp/'
+# project imports
+from . import datapaths
+
+
 
 class metaDataHandler:
     
     def __init__(self,name):
         
-        self.path = f'{tempPath}{name}_metaData.pkl'
+        self.path = f'{datapaths.primary}{name}_metaData.pkl'
         
     def isMatch(self,reqMetaData:dict)->bool:
         

@@ -2,9 +2,7 @@ hr {
     border-top: 2px solid gray;
 }
 
-.g-0 {
-    grid-gutter-width: 0rem;
-}
+
 .dropdown-container {
     display: inline-block;
     grid-template-columns: repeat(3, 1fr);

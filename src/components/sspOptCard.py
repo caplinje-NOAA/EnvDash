@@ -1,26 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Sep 22 14:38:11 2023
-
+Sound Speed profile options card
 @author: jim
 """
 
-from dash import Dash, dcc, html,State, ALL,callback
+# dash imports
+from dash import Dash, dcc, html,State, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
-
+# project imports
 from . import ids
 
-
-# latInput = dbc.InputGroup(
-#             [
-#                 dbc.InputGroupText('Center Latitude',className='input-group-label'),
-#                 dbc.Input(type="number",id=ids.LAT_INPUT),
-#                 dbc.InputGroupText('degrees N'),
-#             ],
-#             className="mb-3",
-#         )
 
 
 
@@ -31,13 +23,7 @@ monthDropdown = html.Div(
     ]
 )
 
-# includeDropdown = html.Div(
-#     [
-#         dcc.Dropdown(['none'], 'none', id=ids.SSP_EXCLUDE_DROPDOWN, multi=True),
-       
-#     ]
-# )
-# coniguration card to open canvas and display current configuration
+
 card = dbc.Card(
     [
 
@@ -47,11 +33,7 @@ card = dbc.Card(
                 html.H6("Month:", className="card-title"),
                 monthDropdown,
                 html.H6("Excluded Points:", className="card-title"),
-                #includeDropdown
-                #dbc.Toast(html.H6(id=ids.BATH_ERROR),header="Data Status:")
-
-                
-                
+                               
         
             ]
         ),
@@ -64,7 +46,8 @@ card = dbc.Card(
 
 
 def render(app: Dash) -> html.Div:
-    
+    # callback for changes to the month dropdown
+    # changing the month triggers a data update and chains to primary callback in gen opts
     @callback(
         Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True), 
         

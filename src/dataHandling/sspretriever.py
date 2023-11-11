@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Sep 20 18:18:29 2023
-
+module for retreiving temperature and salinity data from the WOA data set and calculating the corresponding SSP
 @author: jim
 """
-import os.path
-import pickle
 
+# python imports
+import urllib.request
+
+# data science imports
 import numpy as np
 import xarray as xr
 import pandas as pd
 
-import urllib.request
-
+# project imports
 from .metaDataHandling import metaDataHandler
+from .geoTools import boundingBox
+from . import datapaths
 
-dataPath = 'data//temp//'
+
+dataPath = datapaths.primary
 savePrefix = f'{dataPath}woadata'
 saveSuffix ='.netcdf'
 
@@ -29,47 +33,39 @@ monthDict = {'January':'01','February':'02','March':'03','April':'04','May':'05'
 
 
 metaData = {'temperature':metaDataHandler('sspt'),'salinity':metaDataHandler('ssps')}
-
-
-def ds_to_df(ds:xr.Dataset)->pd.DataFrame:
-    df = pd.DataFrame(columns=['depth'],data=np.array(ds.depth))
-    for lat in ds.lat:
-        for lon in ds.lon:
-            cname = f'[{lat:.2f},{lon:.2f}]'
-            df[cname] = np.array(ds.sel(lat=lat,lon=lon).C)
-            
-    return df
-    
+   
              
-def getWOAdata(variable,statistic,month,lonRange,latRange):
+def getWOAdata(variable,statistic,month,BB:boundingBox):
     """download single variable file"""
     # check local storage for requested data
-    reqMetaData = {'var':variable,'stat':statistic,'month':month,'lon':lonRange,'lat':latRange}
+    reqMetaData = {'var':variable,'stat':statistic,'month':month,'BB':BB}
     exists = metaData[variable].isMatch(reqMetaData)
+ 
+    # return local if exists
+    if exists:
+        print('Attempting to use local WOA data in {BB.halfwdith_km} km box near [{BB.cLat:.3f},{BB.cLon:.3f}].')
+        return True
     
-    
+    # construct request
     host = f'https://www.ncei.noaa.gov/thredds-ocean/ncss/ncei/woa/{variable}/decav/0.25/'
     filename = f'woa18_decav_{variable[0]}{month}_04.nc'
     var = f'{variable[0]}_{statistic}'
     savePath=f'{savePrefix}_{variable[0]}{saveSuffix}'
- 
-    
-    if exists:
-        print('Attempting to use local WOA data.')
-        return True
     basetime = basetimes[int(month)-1].replace(':','%3A')
      
-    query = f'?var={var}&north={latRange[1]:.3f}&west={lonRange[0]:.3f}&east={lonRange[1]:.3f}&south={latRange[0]:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'
+    query = f'?var={var}&north={BB.north:.3f}&west={BB.west:.3f}&east={BB.east:.3f}&south={BB.south:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'
     
     fullurl = f'{host}{filename}{query}'
-     
+    
+    # make request
     req = urllib.request.urlretrieve(fullurl, savePath)
+    # update existing meta data
     metaData[variable].writeMetaData(reqMetaData)
     
     return req
 
 def getWOAgrid(dataset):
-
+  """retrive grid on which data exists. Useful for calculating distances to epochs"""
   surfTemp = dataset.sel(depth=0.0)
   tlats = []
   tlons = []
@@ -83,6 +79,7 @@ def getWOAgrid(dataset):
   return [np.array(tlons),np.array(tlats)]
 
 def toDataFrame(dataset):
+    """Convert to half-baked dataframe for plotting"""
     
     df = dataset.to_dataframe()
     
@@ -102,16 +99,17 @@ def toDataFrame(dataset):
 #     return 
 
 def SS_Mackenzie(T,S,D):
+    """Mackenzie equation for sound speed as a function of temp, salin, and depth."""
 
-  return 1448.96+4.591*T-5.304e-2*T**2+2.374e-4*T**3+1.340*(S-35)+1.63e-2*D+1.675e-7*D**2-1.025e-2*T*(S-35)-7.139e-13*T*D**3
+    return 1448.96+4.591*T-5.304e-2*T**2+2.374e-4*T**3+1.340*(S-35)+1.63e-2*D+1.675e-7*D**2-1.025e-2*T*(S-35)-7.139e-13*T*D**3
 
-def retrieveSSprofiles(lonRange,latRange,Month='January',Statistic='mn',as_DataFrame=False):
-
+def retrieveSSprofiles(BB:boundingBox,Month='January',Statistic='mn',as_DataFrame=False):
+    """Return SSP profile for inputs.  Calls request function to get file (getWOAdata) and loads the local data."""
   
     
-    getWOAdata('temperature',Statistic,monthDict[Month],lonRange,latRange)
-    getWOAdata('salinity',Statistic,monthDict[Month],lonRange,latRange)
-    
+    getWOAdata('temperature',Statistic,monthDict[Month],BB)
+    getWOAdata('salinity',Statistic,monthDict[Month],BB)
+    print(f'Successfully retrieved WOA data in {BB.halfwidth_km} km box near [{BB.cLat:.3f},{BB.cLon:.3f}].')
     sPath =f'{savePrefix}_s{saveSuffix}'
     tPath =f'{savePrefix}_t{saveSuffix}'
     
@@ -128,17 +126,7 @@ def retrieveSSprofiles(lonRange,latRange,Month='January',Statistic='mn',as_DataF
     else:
         return ds
     
-# lat_pnt =40.867922812601805
-# lon_pnt = -64.16015625000001
-# minutes = 60
 
-# minutes = minutes/2
-# lonRange = [lon_pnt-minutes/60,lon_pnt+minutes/60]
-# latRange = [lat_pnt-minutes/60,lat_pnt+minutes/60]
- 
-# ds = retrieveSSprofiles(lonRange,latRange,Month='January',Statistic='mn')    
-# df = toDataFrame(ds)
-    
 
     
    

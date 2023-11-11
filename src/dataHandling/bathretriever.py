@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May  7 11:49:56 2023
-
+Module for retrieving, loading, and managing bathymetric data from the CRM and SRTM models
 @author: jim
 """
-#import os.path
+
+# python imports
 import urllib.request
 import urllib.error as urlerror
 
+# data science imports
 import numpy as np
 from dataclasses import dataclass
 import scipy.io
-import scipy.ndimage as snd
-from pyproj import Geod
-import pickle
 
-
+# project imports
 from .metaDataHandling import metaDataHandler
+from .geoTools import boundingBox
+from . import datapaths
 
-geod = Geod(ellps="WGS84")
-dataPath = 'data/temp/'
+
+dataPath = datapaths.primary
 savePath = f'{dataPath}bathdata.mat'
 metaDataName ='bath'
+
+# instantiate meta data handler
+metaData = metaDataHandler('bath')   
 
 @dataclass
 class bathdata:
@@ -29,9 +33,12 @@ class bathdata:
     lon:np.ndarray
     topo: np.ndarray
     error:str
+    def summary(self):
+        return f'size={np.shape(self.topo)},mean depth = {np.mean(np.mean(self.topo))}'
     
 
 def loadData(path,structname,variable,landMask=10.0):
+    """Load local .mat data structure and return bathdata object"""
 
     
     mat = scipy.io.loadmat(path)
@@ -44,24 +51,16 @@ def loadData(path,structname,variable,landMask=10.0):
     
     
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
-
-          
-    
-        
-metaData = metaDataHandler('bath')        
-        
    
 
-def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
-    ## CRM volume information
-    # estimated center lat/lon 
-    estLat = np.mean(latRange)
-    estLon = np.mean(lonRange)
-    
-    reqMetaData = {'lat':latRange,'lon':lonRange,'source':DataSet}
+def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
+    """ perform http request and download bath data"""
+  
+    reqMetaData = {'BB':BB,'source':DataSet}
     exists = metaData.isMatch(reqMetaData)
            
-        
+    lonRange = [BB.west,BB.east]
+    latRange = [BB.south,BB.north]    
     
     if DataSet=='CRM':
       prefix = 'usgsCeCrm'
@@ -82,7 +81,7 @@ def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
               boundedIndex = i
         return boundedIndex
     
-      bounds = boundedBy(estLat, estLon)
+      bounds = boundedBy(BB.cLat, BB.cLon)
     
       if bounds==-1:
         error = 'Inputted coordinates are not bounded by any CRM data sets.'
@@ -136,7 +135,7 @@ def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
       latRange[1] = latRangeData[1]
     
     if exists:
-        print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from local storage.')
+        print(f'Succesfully loaded bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from local storage.')
         return loadData(savePath, structname, variable)
     
 
@@ -147,66 +146,19 @@ def retrieve(latRange:[float], lonRange:[float], DataSet='SRTM')->bathdata:
     try:
         print(fullurl)
         req = urllib.request.urlretrieve(fullurl, savePath)
-    except urlerror.HTTPError:
+    except urlerror.HTTPError as error:
+        print(error)
         return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable.')
     print(f'http returned {req}')
     data = loadData(savePath, structname, variable)
     metaData.writeMetaData(reqMetaData)
-    print(f'Succesfully loaded bathymetry data near ({estLat:.3f},{estLon:.3f}) from ERDDAP server.')
+    print(f'Succesfully loaded bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from ERDDAP server.')
     return data
 
-def retrieveTransect(bathdata,sLat,sLon,eLat,eLon, method='interpolate'):
-
-    def toPixel(coord_latlon):
-        latPixel = np.argmin(np.abs(coord_latlon[0]-bathdata.lat))
-        lonPixel = np.argmin(np.abs(coord_latlon[1]-bathdata.lon))
-        return [latPixel,lonPixel]
-    
-    startCoord = [sLat,sLon]
-    endCoord = [eLat,eLon]
-    
-    # convert to pixel coords
-    startPixelCoord = toPixel(startCoord)
-    endPixelCoord = toPixel(endCoord)
-    
-    transLenPixels = int(np.round(np.hypot(startPixelCoord[0]-endPixelCoord[0],startPixelCoord[1]-endPixelCoord[1])))
-    
-    
-    # define x dimension as longitude, in pixel coordinates ..... y ... latitude ....
-    
-    x = np.round(np.linspace(startPixelCoord[1],endPixelCoord[1],num=transLenPixels)).astype(int)
-    
-    y = np.round(np.linspace(startPixelCoord[0],endPixelCoord[0],num=transLenPixels)).astype(int)
-    
-    if method=='nearest':
-        transect = bathdata.topo[y,x]
-        lat = bathdata.lat[y]
-        lon = bathdata.lon[x]
-        
-    elif method=='interpolate':
-        lon = np.linspace(bathdata.lon[startPixelCoord[1]],bathdata.lon[endPixelCoord[1]],num=transLenPixels)
-        lat = np.linspace(bathdata.lat[startPixelCoord[0]],bathdata.lat[endPixelCoord[0]],num=transLenPixels)
-        transect = snd.map_coordinates(bathdata.topo,[y,x])
-    else:
-        print(f'Unable to get transect using method {method}.  Method must be "nearest" or "interpolate"')
-        return 
-    
-    r = np.zeros_like(transect)
-    
-    for i,(lonVal,latVal) in enumerate(zip(lon,lat)):
-        r[i] = geod.line_length([startCoord[1],lonVal],[startCoord[0],latVal])
-        
-    
-    return r, transect
 
 
-def getEndCoord(sLat,sLon,az,km):
-    
-    dist = km*1000.0
-    
-    eLon, eLat, back = geod.fwd(sLon,sLat,az,dist)
-    
-    return eLat,eLon
+
+
     
     
     
