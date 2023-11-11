@@ -163,7 +163,7 @@ card = dbc.Card(
 
 
 #### Callbacks of above components
-
+# !!coupling warning: modifying input dictionary may break transectPlot module
 def buildInputDict(ids:[dict],values:[],key)->dict:
     """builds a dictionary for flexible inputs from pattern matching callbacks.
     ids are a list of dictionary component ids, values are their stored value, and key
@@ -205,7 +205,7 @@ def render(app: Dash) -> html.Div:
             print('Getting Bath Data')
             bathdata = retrieve(BB,DataSet=bathsource)
             
-            # convert list inputs to dictionary
+            # convert list inputs to dictionary, high coupling warning here
             inputs = buildInputDict(parameterIDs,parameterValues,'parameter')
             inputs['km']=km
             

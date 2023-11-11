@@ -20,19 +20,20 @@ import numpy as np
 from . import ids, text
 from ..dataHandling.transects import calculateTransect
 from ..dataHandling.geoTools import getEndCoord
+from ..dataHandling.bathretriever import bathdata
 
 def drawTransects(startLatLon, endLatLon):
     return dl.Polyline(positions=[startLatLon,endLatLon],color='red')
 
-def plotTransects(bathdata,transectType:str,inputs:dict)->html.Div:
-            
+def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
+            # high coupling with bathOptCard related to the inputs dict
             if transectType == text.transect_single:
           
                 sLat, sLon = inputs['lat-start'],inputs['lon-start']
                 eLat, eLon = inputs['lat-end'], inputs['lon-end']
   
             
-                r,transect = calculateTransect(bathdata, sLat, sLon, eLat, eLon)
+                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
                 fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
                
        
@@ -44,7 +45,7 @@ def plotTransects(bathdata,transectType:str,inputs:dict)->html.Div:
                 sLat, sLon = inputs['lat-start'],inputs['lon-start']
                 eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['km'])
                 
-                r,transect = calculateTransect(bathdata, sLat, sLon, eLat, eLon)
+                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
               
                 fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
                
@@ -66,7 +67,7 @@ def plotTransects(bathdata,transectType:str,inputs:dict)->html.Div:
                     eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
             
                
-                    r,transect = calculateTransect(bathdata, sLat, sLon, eLat, eLon)
+                    r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
             
                     fig.add_trace(px.line(x=r,y=transect).data[0])
                     mapLayers.append(drawTransects([sLat,sLon], [eLat,eLon]))

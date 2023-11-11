@@ -5,8 +5,7 @@ module for retreiving temperature and salinity data from the WOA data set and ca
 @author: jim
 """
 
-# python imports
-import urllib.request
+
 
 # data science imports
 import numpy as np
@@ -14,14 +13,8 @@ import xarray as xr
 import pandas as pd
 
 # project imports
-from .metaDataHandling import metaDataHandler
 from .geoTools import boundingBox
-from . import datapaths
-
-
-dataPath = datapaths.primary
-savePrefix = f'{dataPath}woadata'
-saveSuffix ='.netcdf'
+from . import tempRequests
 
 
 ## These strings are necessary to request the correct files from the ERDAP server
@@ -32,37 +25,28 @@ basetimes = ['1986-01-15T17:26:17.131Z','1986-02-15T03:55:20.963Z','1986-03-17T1
 monthDict = {'January':'01','February':'02','March':'03','April':'04','May':'05','June':'06','July':'07','August':'08','September':'09','October':'10','November':'11','December':'12'}
 
 
-metaData = {'temperature':metaDataHandler('sspt'),'salinity':metaDataHandler('ssps')}
+
    
              
 def getWOAdata(variable,statistic,month,BB:boundingBox):
-    """download single variable file"""
-    # check local storage for requested data
-    reqMetaData = {'var':variable,'stat':statistic,'month':month,'BB':BB}
-    exists = metaData[variable].isMatch(reqMetaData)
- 
-    # return local if exists
-    if exists:
-        print('Attempting to use local WOA data in {BB.halfwdith_km} km box near [{BB.cLat:.3f},{BB.cLon:.3f}].')
-        return True
-    
+    """construct request and get xarray dataset"""
+  
     # construct request
     host = f'https://www.ncei.noaa.gov/thredds-ocean/ncss/ncei/woa/{variable}/decav/0.25/'
     filename = f'woa18_decav_{variable[0]}{month}_04.nc'
     var = f'{variable[0]}_{statistic}'
-    savePath=f'{savePrefix}_{variable[0]}{saveSuffix}'
+   # savePath=f'{savePrefix}_{variable[0]}{saveSuffix}'
     basetime = basetimes[int(month)-1].replace(':','%3A')
      
-    query = f'?var={var}&north={BB.north:.3f}&west={BB.west:.3f}&east={BB.east:.3f}&south={BB.south:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'
+    query = f'?var={var}&north={BB.north:.3f}&west={BB.west:.3f}&east={BB.east:.3f}&south={BB.south:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'   
+    request = f'{host}{filename}{query}'
     
-    fullurl = f'{host}{filename}{query}'
+    data, r = tempRequests.getData(request, xr.open_dataset, decode_times=False)
     
-    # make request
-    req = urllib.request.urlretrieve(fullurl, savePath)
-    # update existing meta data
-    metaData[variable].writeMetaData(reqMetaData)
+    if not data:
+        r.raise_for_status()
     
-    return req
+    return data
 
 def getWOAgrid(dataset):
   """retrive grid on which data exists. Useful for calculating distances to epochs"""
@@ -107,16 +91,12 @@ def retrieveSSprofiles(BB:boundingBox,Month='January',Statistic='mn',as_DataFram
     """Return SSP profile for inputs.  Calls request function to get file (getWOAdata) and loads the local data."""
   
     
-    getWOAdata('temperature',Statistic,monthDict[Month],BB)
-    getWOAdata('salinity',Statistic,monthDict[Month],BB)
+    dataset_t = getWOAdata('temperature',Statistic,monthDict[Month],BB)
+    temp = dataset_t.isel(time=0)
+    dataset_s = getWOAdata('salinity',Statistic,monthDict[Month],BB)
+    sal = dataset_s.isel(time=0)
     print(f'Successfully retrieved WOA data in {BB.halfwidth_km} km box near [{BB.cLat:.3f},{BB.cLon:.3f}].')
-    sPath =f'{savePrefix}_s{saveSuffix}'
-    tPath =f'{savePrefix}_t{saveSuffix}'
     
-    dataset = xr.open_dataset(tPath,decode_times=False)
-    temp = dataset.isel(time=0)
-    dataset = xr.open_dataset(sPath,decode_times=False)
-    sal = dataset.isel(time=0)
     
     ds = xr.merge([temp,sal])
     ds['C'] = SS_Mackenzie(ds.t_mn,ds.s_mn,ds.depth)

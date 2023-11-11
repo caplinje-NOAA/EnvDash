@@ -10,7 +10,7 @@ from pyproj import Geod
 geod = Geod(ellps="WGS84")
 
 
-
+# !! coupling warning, many modules depend on content of bounding box
 @dataclass
 class boundingBox:
     north:float

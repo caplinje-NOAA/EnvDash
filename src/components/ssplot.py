@@ -31,7 +31,8 @@ def decodeCoord(coordstr:str)->[float]:
 
 def buildFig(df:pd.DataFrame,BB:boundingBox,month:str)->html.Div:   
     """Builds SSP figure Div"""
-   
+    if len(df)==0:
+        return None
     fig = px.line(df,x='C',y='depth',color='Coordinate')
     
     fig.update_layout(title=f'{month} SSP near [{BB.cLat:.3f},{BB.cLon:.3f}]',
@@ -76,8 +77,10 @@ def render(coord_lat_lon,km,month,bathsource):
     # figure and layers
     figure = buildFig(df,BB,month)    
     mapLayers = buildMapLayers(df,BB)
-  
-    alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
+    if not figure:
+        alert = alerts.getAlert(alerts.warning,'No WOA data for this time/area, either expand the region or select a different month.',duration = 8000)
+    else:
+        alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
   
     
     return figure, mapLayers, alert

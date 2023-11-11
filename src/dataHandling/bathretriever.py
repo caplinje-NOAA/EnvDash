@@ -6,8 +6,6 @@ Module for retrieving, loading, and managing bathymetric data from the CRM and S
 """
 
 # python imports
-import urllib.request
-import urllib.error as urlerror
 
 # data science imports
 import numpy as np
@@ -15,18 +13,13 @@ from dataclasses import dataclass
 import scipy.io
 
 # project imports
-from .metaDataHandling import metaDataHandler
+
 from .geoTools import boundingBox
-from . import datapaths
+from . import  tempRequests
 
 
-dataPath = datapaths.primary
-savePath = f'{dataPath}bathdata.mat'
-metaDataName ='bath'
 
-# instantiate meta data handler
-metaData = metaDataHandler('bath')   
-
+# !! coupling warning: modifying bathdata class may break many modules
 @dataclass
 class bathdata:
     lat:np.ndarray
@@ -37,13 +30,13 @@ class bathdata:
         return f'size={np.shape(self.topo)},mean depth = {np.mean(np.mean(self.topo))}'
     
 
-def loadData(path,structname,variable,landMask=10.0):
+def unpackData(matdata,structname,variable,landMask=10.0):
     """Load local .mat data structure and return bathdata object"""
 
     
-    mat = scipy.io.loadmat(path)
+    #mat = loadmat(path)
     
-    data = mat[structname]
+    data = matdata[structname]
     lat = np.squeeze(data['latitude'][0][0])
     lon = np.squeeze(data['longitude'][0][0])
     topo = data[variable][0][0]
@@ -55,9 +48,6 @@ def loadData(path,structname,variable,landMask=10.0):
 
 def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
     """ perform http request and download bath data"""
-  
-    reqMetaData = {'BB':BB,'source':DataSet}
-    exists = metaData.isMatch(reqMetaData)
            
     lonRange = [BB.west,BB.east]
     latRange = [BB.south,BB.north]    
@@ -120,7 +110,6 @@ def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
       variable='z'
       host = 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/'
     
-    # define box offset to grab
 
 
     # test if range is outside of dataset and set bounds accordingly if so
@@ -134,24 +123,22 @@ def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
     if latRange[1]>latRangeData[1]:
       latRange[1] = latRangeData[1]
     
-    if exists:
-        print(f'Succesfully loaded bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from local storage.')
-        return loadData(savePath, structname, variable)
-    
 
     
     query = f'?{variable}%5B({latRange[1]:.4f}):1:({latRange[0]:.4f})%5D%5B({lonRange[0]:.4f}):1:({lonRange[1]:.4f})%5D'
     fullurl = f'{host}{filename}{query}'
-    print('attempting request')
-    try:
-        print(fullurl)
-        req = urllib.request.urlretrieve(fullurl, savePath)
-    except urlerror.HTTPError as error:
-        print(error)
+
+  
+    matdata,r = tempRequests.getData(fullurl, scipy.io.loadmat)
+    
+    # request error handling 
+    if r.status_code == 404:
         return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable.')
-    print(f'http returned {req}')
-    data = loadData(savePath, structname, variable)
-    metaData.writeMetaData(reqMetaData)
+    else:
+        r.raise_for_status()
+ 
+    data = unpackData(matdata, structname, variable)
+
     print(f'Succesfully loaded bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from ERDDAP server.')
     return data
 

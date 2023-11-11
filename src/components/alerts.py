@@ -14,8 +14,11 @@ import dash_bootstrap_components as dbc
 
 from . import ids
 
+warning = 'warning'
+success = 'success'
+danger = 'danger'
 
-def getAlert(color,message):
+def getAlert(color,message,duration=4000):
     return html.Div(
         [
            
@@ -23,7 +26,7 @@ def getAlert(color,message):
                 message,
                 
                 is_open=True,
-                duration=4000,
+                duration=duration,
                 color=color
             ),
         ]
