@@ -183,7 +183,7 @@ def render(app: Dash) -> html.Div:
     @app.callback(
         
         Output(ids.TRANS_MAP_LAYER, "children"),
-        Output(ids.TAB_SPINNER_SECONDARY, "children"),
+        Output(ids.TRANSECT_CONTENT, "children"),
         
         Input(ids.PLOT_TRANSECTS_BUTTON_S, "n_clicks"),
         

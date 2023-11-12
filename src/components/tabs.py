@@ -13,24 +13,31 @@ import dash_bootstrap_components as dbc
 
 # project imports
 from . import bathOptCard,ids,sspOptCard
+from . import bathplot, ssplot
 
 # Container for left figure / object
-spinner  =        dcc.Loading(
-                    id=ids.TAB_SPINNER,
+bathDiv  =        dcc.Loading(
+                    id=ids.BATH_TAB_CONTENT,
                     children=[html.Div()],
                     type="circle",
                 )
 
 # Container for right figure / object (e.g. transects)
-spinnerSecondary =        dcc.Loading(
-                    id=ids.TAB_SPINNER_SECONDARY,
+transectDiv =        dcc.Loading(
+                    id=ids.TRANSECT_CONTENT,
                     children=[html.Div()],
                     type="circle",
                 )
 
 # container for all figures (bottom section of tabs, width sets ratio (out of 12))
-tabContent = dbc.Row([dbc.Col(spinner,width='auto',id=ids.PRIMARY_FIGURE_COLUMN),
-                      dbc.Col(spinnerSecondary)],style={'flex-wrap': 'nowrap'}) # no wrap fixed the overflow issues with wide transect figures
+bathContent = dbc.Row([dbc.Col(bathDiv,width='auto'),
+                      dbc.Col(transectDiv)],style={'flex-wrap': 'nowrap'}) # no wrap fixed the overflow issues with wide transect figures
+
+soundSpeedContent = dcc.Loading(
+                    id=ids.SSP_TAB_CONTENT,
+                    children=[html.Div()],
+                    type="circle",
+                ) 
 
 
 def render(app: Dash) -> html.Div:
@@ -49,12 +56,12 @@ def render(app: Dash) -> html.Div:
     return html.Div([
         # children are the upper portion of the tab (i.e. the options, etc)
         dcc.Tabs(id=ids.TABS, value='bath-tab', children=[
-            dcc.Tab(label='Bathymetry', value='bath-tab',children=[bathOptCard.render(app)]),
-            dcc.Tab(label='Sound Speed', value='ssp-tab',children=[sspOptCard.render(app)]),
+            dcc.Tab(label='Bathymetry', value='bath-tab',children=[bathOptCard.render(app),bathplot.render(app)]),
+            dcc.Tab(label='Sound Speed', value='ssp-tab',children=[sspOptCard.render(app),ssplot.render(app)]),
             dcc.Tab(label='Seabed', value='seabed-tab',children=[html.Div()]),
         ]),
         # actual figures / tables go in tab content
-        tabContent
+#        tabContent
     ])
 
 #### OLD CALLBACKS FOR ADJUSTING MAP LAYER, REMOVING/HIGHLIGHTING SSP POINTS

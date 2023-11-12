@@ -6,7 +6,7 @@ This module handles the rendering of SSP data
 """
 
 # dash imports
-from dash import dcc, html
+from dash import dcc, Dash, html, Output, State, Input
 
 # data science imports
 import pandas as pd
@@ -20,6 +20,13 @@ from ..dataHandling.sspretriever import retrieveSSprofiles
 from ..dataHandling.geoTools import getBoundingBox, boundingBox
 from . import ids, alerts
 
+inputsStore = dcc.Store(id=ids.SSP_INPUTS_STORE, storage_type='session', data={})
+
+soundSpeedContent = dcc.Loading(
+                    id=ids.SSP_TAB_CONTENT,
+                    children=[html.Div()],
+                    type="circle",
+                ) 
 
 def decodeCoord(coordstr:str)->[float]:
     """convert string coordinate [lat,lon] to [float]"""
@@ -65,25 +72,42 @@ def buildMapLayers(df,BB:boundingBox):
     mapLayers=mapLayers+markers 
     return mapLayers       
     
-
-def render(coord_lat_lon,km,month,bathsource):
-    """ Sound speed renderer function in the same template as the other tab content"""   
-    # construct bounding box
-    BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
-   
-    # get profiles
-    df = retrieveSSprofiles(BB,Month=month,as_DataFrame=True)
-   
-    # figure and layers
-    figure = buildFig(df,BB,month)    
-    mapLayers = buildMapLayers(df,BB)
-    if not figure:
-        alert = alerts.getAlert(alerts.warning,'No WOA data for this time/area, either expand the region or select a different month.',duration = 8000)
-    else:
-        alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
-  
+def render(app:Dash)->html.Div:
+    @app.callback(
+    # outputs are the two object/figure containers, any map layers, and the alert div    
+    Output(ids.SSP_TAB_CONTENT, 'children'),
+    Output(ids.MAP_LAYER, "children", allow_duplicate=True),
+    Output(ids.ALERT, "children", allow_duplicate=True), 
     
-    return figure, mapLayers, alert
+    [Input(ids.SSP_INPUTS_STORE, "data"),   
+     ],
+     prevent_initial_call=True
+     
+    )
+    def updatePlot(inputs):
+        """ Sound speed renderer function in the same template as the other tab content"""   
+    
+        coord_lat_lon = inputs['center']
+        km = inputs['km']
+        month = inputs['month']
+
+        # construct bounding box
+        BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
+       
+        # get profiles
+        df = retrieveSSprofiles(BB,Month=month,as_DataFrame=True)
+       
+        # figure and layers
+        figure = buildFig(df,BB,month)    
+        mapLayers = buildMapLayers(df,BB)
+        if not figure:
+            alert = alerts.getAlert(alerts.warning,'No WOA data for this time/area, either expand the region or select a different month.',duration = 8000)
+        else:
+            alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
+      
+        
+        return figure, mapLayers, alert
+    return html.Div([soundSpeedContent,inputsStore])
 
 
 ## get nearest profile method

@@ -6,13 +6,15 @@ The general options (top-left card) components and primary callback of the app
 """
 
 # dash imports
-from dash import Dash, html,State
+from dash import Dash, html,State, dcc, no_update
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
 # project imports
 from . import ids,bathplot, ssplot
 
+
+metadataStore = dcc.Store(id=ids.META_DATA_STORE, storage_type='session')
 
 latInput = dbc.InputGroup(
             [
@@ -71,16 +73,15 @@ card = dbc.Card(
 )
 
 # dictionary container of render methods for each tab
-renderer = {'bath-tab':bathplot,'ssp-tab':ssplot,'seabed-tab':None}
 
 
 def render(app: Dash) -> html.Div:
+ 
     @app.callback(
     # outputs are the two object/figure containers, any map layers, and the alert div    
-    Output(ids.TAB_SPINNER, 'children'),
-    Output(ids.TAB_SPINNER_SECONDARY, "children",allow_duplicate=True),
-    Output(ids.MAP_LAYER, "children"),
-    Output(ids.ALERT, "children"), 
+    Output(ids.BATH_INPUTS_STORE,'data'),
+    Output(ids.SSP_INPUTS_STORE, 'data'),
+
     
     [Input(ids.GET_DATA_BUTTON, "n_clicks"),
      State(ids.TABS, 'value'),
@@ -89,36 +90,48 @@ def render(app: Dash) -> html.Div:
      State(ids.BB_KM,'value'),
      State(ids.SSP_MONTH_DROPDOWN,'value'),
      State(ids.BATH_SOURCE_DROPDOWN,'value'),
-     State(ids.TAB_SPINNER_SECONDARY, "children")],
+     State(ids.BATH_INPUTS_STORE,'data'),
+     State(ids.SSP_INPUTS_STORE, 'data'),
+
+     
+     ],
      prevent_initial_call=True
      
     )
-    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,secondaryChild):
+    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,bathInputs,sspInputs):
         """This is the main callback of the app, being the duplicate output of all callbacks that trigger
         a data update.  Gathers all data and updates most content"""
+        
         if n is None:
             return None
         else:
-            click_lat_lng = [lat,lon]
+            center = [lat,lon]
             
+            bathOut = no_update
+            sspOut = no_update
+            newBathInputs = {'center':center,'km':km,'source':bathsource}
+            newsspInputs = {'center':center,'km':km,'month':month}
+            
+            if (tab_value=='bath-tab') and (newBathInputs !=bathInputs):
+                bathOut = newBathInputs
+                
+            if (tab_value=='ssp-tab') and (newsspInputs !=sspInputs):
+                sspOut = newsspInputs
             # secondary child div contains transects for the bath tab
             # passing the child through this callback allows it to remain
             # 
-            if tab_value == 'bath-tab':
-                outSecondaryChild = secondaryChild
-            else:
-                outSecondaryChild = []
-                
-            fig, mapLayer, alert = renderer[tab_value].render(click_lat_lng,km,month,bathsource)
+          
+            
+
     
-    
-            return fig, outSecondaryChild, mapLayer, alert
+            return bathOut,sspOut
    
 
 
     return html.Div(
         [
-            card
+            card,
+            metadataStore
         ]
     )
 

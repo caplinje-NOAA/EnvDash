@@ -30,7 +30,7 @@ class bathdata:
         return f'size={np.shape(self.topo)},mean depth = {np.mean(np.mean(self.topo))}'
     
 
-def unpackData(matdata,structname,variable,landMask=10.0):
+def unpackData(matdata,structname,variable, downSample,landMask=10.0):
     """Load local .mat data structure and return bathdata object"""
 
     
@@ -40,13 +40,22 @@ def unpackData(matdata,structname,variable,landMask=10.0):
     lat = np.squeeze(data['latitude'][0][0])
     lon = np.squeeze(data['longitude'][0][0])
     topo = data[variable][0][0]
+
+    print(f'data type:{topo.dtype}')
+    if downSample:
+        print(f'downsampling to {downSample} pixels from {len(lat)} points')
+        skip = int(len(lat)/downSample)
+        print(topo.dtype)
+        topo = topo[::skip,::skip]
+        lat = lat[::skip]
+        lon = lon[::skip]
+    topo = topo.astype(np.float16)
     topo[topo>1]=landMask
-    
-    
+    print(f'new data type:{topo.dtype}')
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
    
 
-def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
+def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None)->bathdata:
     """ perform http request and download bath data"""
            
     lonRange = [BB.west,BB.east]
@@ -137,9 +146,9 @@ def retrieve(BB:boundingBox, DataSet='SRTM')->bathdata:
     else:
         r.raise_for_status()
  
-    data = unpackData(matdata, structname, variable)
+    data = unpackData(matdata, structname, variable, downSample)
 
-    print(f'Succesfully loaded bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from ERDDAP server.')
+    print(f'Succesfully loaded {DataSet} bathymetry data near ({BB.cLat:.3f},{BB.cLon:.3f}) from ERDDAP server.')
     return data
 
 
