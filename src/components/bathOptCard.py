@@ -203,7 +203,7 @@ def render(app: Dash) -> html.Div:
             print(BB)
  
             print('Getting Bath Data')
-            bathdata = retrieve(BB,DataSet=bathsource)
+            bathdata = retrieve(BB,DataSet=bathsource,downCast=False)
             
             # convert list inputs to dictionary, high coupling warning here
             inputs = buildInputDict(parameterIDs,parameterValues,'parameter')

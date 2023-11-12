@@ -30,7 +30,7 @@ class bathdata:
         return f'size={np.shape(self.topo)},mean depth = {np.mean(np.mean(self.topo))}'
     
 
-def unpackData(matdata,structname,variable, downSample,landMask=10.0):
+def unpackData(matdata,structname,variable, downSample,landMask=10.0,downCast=False):
     """Load local .mat data structure and return bathdata object"""
 
     
@@ -49,13 +49,14 @@ def unpackData(matdata,structname,variable, downSample,landMask=10.0):
         topo = topo[::skip,::skip]
         lat = lat[::skip]
         lon = lon[::skip]
-    topo = topo.astype(np.float16)
+    if downCast:
+        topo = topo.astype(np.float16)
     topo[topo>1]=landMask
     print(f'new data type:{topo.dtype}')
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
    
 
-def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None)->bathdata:
+def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None, downCast=False)->bathdata:
     """ perform http request and download bath data"""
            
     lonRange = [BB.west,BB.east]

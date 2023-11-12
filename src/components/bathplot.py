@@ -19,6 +19,7 @@ from . import ids, alerts
 
 
 figureDownSampling = {'SRTM':None,'CRM':256}
+dataDowncast = {'SRTM':False,'CRM':True}
 # Container for left figure / object
 bathDiv  =        dcc.Loading(
                     id=ids.BATH_TAB_CONTENT,
@@ -94,7 +95,7 @@ def render(app: Dash) -> html.Div:
         
         # get data 
     
-        bathdata = retrieve(BB,DataSet=bathsource, downSample=figureDownSampling[bathsource])
+        bathdata = retrieve(BB,DataSet=bathsource, downSample=figureDownSampling[bathsource],downCast=dataDowncast[bathsource])
         print(bathdata.error)
         
         mapLayers = buildMapLayers(BB)
