@@ -81,6 +81,9 @@ def render(app: Dash) -> html.Div:
     # outputs are the two object/figure containers, any map layers, and the alert div    
     Output(ids.BATH_INPUTS_STORE,'data'),
     Output(ids.SSP_INPUTS_STORE, 'data'),
+    Output(ids.SEABED_INPUTS_STORE,'data'),
+    Output(ids.LAT_INPUT_START, 'value',allow_duplicate=True),
+    Output(ids.LON_INPUT_START, 'value',allow_duplicate=True),
 
     
     [Input(ids.GET_DATA_BUTTON, "n_clicks"),
@@ -90,15 +93,16 @@ def render(app: Dash) -> html.Div:
      State(ids.BB_KM,'value'),
      State(ids.SSP_MONTH_DROPDOWN,'value'),
      State(ids.BATH_SOURCE_DROPDOWN,'value'),
+     State(ids.SEABED_SLIDER,'value'),
      State(ids.BATH_INPUTS_STORE,'data'),
      State(ids.SSP_INPUTS_STORE, 'data'),
-
+     State(ids.SEABED_INPUTS_STORE,'data'),
      
      ],
      prevent_initial_call=True
      
     )
-    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,bathInputs,sspInputs):
+    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,n_seabed,bathInputs,sspInputs,seabedInputs):
         """This is the main callback of the app, being the duplicate output of all callbacks that trigger
         a data update.  Gathers all data and updates most content"""
         
@@ -109,14 +113,21 @@ def render(app: Dash) -> html.Div:
             
             bathOut = no_update
             sspOut = no_update
+            seabedOut = no_update
             newBathInputs = {'center':center,'km':km,'source':bathsource}
             newsspInputs = {'center':center,'km':km,'month':month}
+            newSeabedInputs = {'center':center,'km':km,'n':n_seabed}
             
             if (tab_value=='bath-tab') and (newBathInputs !=bathInputs):
                 bathOut = newBathInputs
                 
             if (tab_value=='ssp-tab') and (newsspInputs !=sspInputs):
                 sspOut = newsspInputs
+                
+            if (tab_value=='seabed-tab') and (newSeabedInputs !=seabedInputs):
+                seabedOut = newSeabedInputs
+                
+                
             # secondary child div contains transects for the bath tab
             # passing the child through this callback allows it to remain
             # 
@@ -124,7 +135,7 @@ def render(app: Dash) -> html.Div:
             
 
     
-            return bathOut,sspOut
+            return bathOut,sspOut,seabedOut, lat, lon
    
 
 

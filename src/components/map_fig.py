@@ -41,15 +41,19 @@ def render(app: Dash) -> html.Div:
 
 
     return html.Div([
-    dl.Map([dl.TileLayer(),
-            dl.LayerGroup(id=ids.MAP_LAYER),
-            dl.LayerGroup(id=ids.TRANS_MAP_LAYER),
-            dl.ScaleControl(position="bottomleft")],
-            center=[39,-94],
-            zoom=4,
-            id=ids.MAP_FIG, 
-            style={'width': '100%', 'height': '60vh', 'margin': "auto", "display": "block"}),
-])
+            dl.Map([dl.TileLayer(),
+                    dl.LayerGroup(id=ids.BATH_MAP_LAYER),
+                    dl.LayerGroup(id=ids.SSP_MAP_LAYER),
+                    dl.LayerGroup(id=ids.SEABED_MAP_LAYER),
+                    
+                    dl.LayerGroup(id=ids.TRANS_MAP_LAYER),
+           
+                    dl.ScaleControl(position="bottomleft")],
+                    center=[39,-94],
+                    zoom=4,
+                    id=ids.MAP_FIG, 
+                    style={'width': '100%', 'height': '60vh', 'margin': "auto", "display": "block"}),
+        ])
     # update_map()
     # return html.Div(id=ids.MAP)
     #return update_map()

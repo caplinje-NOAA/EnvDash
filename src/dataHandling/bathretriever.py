@@ -45,6 +45,8 @@ def unpackData(matdata,structname,variable, downSample,landMask=10.0,downCast=Fa
     if downSample:
         print(f'downsampling to {downSample} pixels from {len(lat)} points')
         skip = int(len(lat)/downSample)
+        if skip==0:
+            skip=1
         print(topo.dtype)
         topo = topo[::skip,::skip]
         lat = lat[::skip]

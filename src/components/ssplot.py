@@ -76,7 +76,7 @@ def render(app:Dash)->html.Div:
     @app.callback(
     # outputs are the two object/figure containers, any map layers, and the alert div    
     Output(ids.SSP_TAB_CONTENT, 'children'),
-    Output(ids.MAP_LAYER, "children", allow_duplicate=True),
+    Output(ids.SSP_MAP_LAYER, "children"),
     Output(ids.ALERT, "children", allow_duplicate=True), 
     
     [Input(ids.SSP_INPUTS_STORE, "data"),   

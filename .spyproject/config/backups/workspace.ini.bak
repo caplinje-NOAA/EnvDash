@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['main.py', 'src\\components\\layout.py', 'src\\components\\ids.py', 'src\\components\\genOptCard.py', 'src\\components\\map_fig.py', 'src\\components\\tabs.py', 'src\\components\\ssplot.py', 'src\\components\\bathplot.py', 'src\\components\\bathOptCard.py', 'src\\components\\alerts.py', 'src\\components\\sspOptCard.py', 'src\\dataHandling\\bathretriever.py', 'src\\dataHandling\\sspretriever.py', 'src\\components\\custom\\inputGroups.py', 'src\\dataHandling\\geoTools.py', 'src\\dataHandling\\metaDataHandling.py', 'assets\\style.css', 'src\\components\\transectPlot.py', 'src\\components\\text.py', 'src\\dataHandling\\transects.py', 'src\\dataHandling\\datapaths.py', 'src\\dataHandling\\tempRequests.py']
+recent_files = ['main.py', 'src\\components\\layout.py', 'src\\components\\ids.py', 'src\\components\\genOptCard.py', 'src\\components\\tabs.py', 'src\\components\\ssplot.py', 'src\\components\\bathplot.py', 'src\\components\\sspOptCard.py', 'src\\components\\seabedOptCard.py', 'src\\components\\text.py', 'src\\dataHandling\\read_usSeabed.py', 'src\\components\\seabedTable.py', 'src\\components\\map_fig.py']
 
 [main]
 version = 0.2.0

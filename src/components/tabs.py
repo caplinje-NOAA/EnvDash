@@ -12,8 +12,8 @@ from dash import Dash, dcc, html, Input, Output, callback, State
 import dash_bootstrap_components as dbc
 
 # project imports
-from . import bathOptCard,ids,sspOptCard
-from . import bathplot, ssplot
+from . import bathOptCard,ids,sspOptCard, seabedOptCard
+from . import bathplot, ssplot, seabedTable
 
 # Container for left figure / object
 bathDiv  =        dcc.Loading(
@@ -58,7 +58,7 @@ def render(app: Dash) -> html.Div:
         dcc.Tabs(id=ids.TABS, value='bath-tab', children=[
             dcc.Tab(label='Bathymetry', value='bath-tab',children=[bathOptCard.render(app),bathplot.render(app)]),
             dcc.Tab(label='Sound Speed', value='ssp-tab',children=[sspOptCard.render(app),ssplot.render(app)]),
-            dcc.Tab(label='Seabed', value='seabed-tab',children=[html.Div()]),
+            dcc.Tab(label='Seabed', value='seabed-tab',children=[seabedOptCard.render(app),seabedTable.render(app)]),
         ]),
         # actual figures / tables go in tab content
 #        tabContent

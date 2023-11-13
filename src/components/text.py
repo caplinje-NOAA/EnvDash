@@ -9,3 +9,5 @@ bulk text should be kept here for easy modifications
 transect_single = 'Single transect with start/end coordinates'
 transect_singleAz = 'Single transect with start coord and azimuth'
 transect_multiple = 'mutiple radials'
+
+folkCodeKey = "Folk Code Key: M = Mud, S = Sand, G = Gravel, parenthesis indicate 'slightly contains', (i.e. (m)G is slightly muddy gravel)"

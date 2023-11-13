@@ -74,7 +74,7 @@ def render(app: Dash) -> html.Div:
     @app.callback(
     # outputs are the two object/figure containers, any map layers, and the alert div    
     Output(ids.BATH_PLOT, 'figure'),
-    Output(ids.MAP_LAYER, "children", allow_duplicate=True),
+    Output(ids.BATH_MAP_LAYER, "children"),
     Output(ids.ALERT, "children", allow_duplicate=True), 
     
     [Input(ids.BATH_INPUTS_STORE, "data"),   
@@ -102,7 +102,7 @@ def render(app: Dash) -> html.Div:
       
         # handle request errors
         if bathdata.error:
-            figure = None
+            figure = go.Figure()
             alert = alerts.getAlert('danger',bathdata.error)
             return figure, mapLayers, alert
     

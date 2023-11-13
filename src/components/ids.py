@@ -1,6 +1,8 @@
 MAP = "map"
 MAP_FIG = 'map-fig'
-MAP_LAYER = 'map-layer'
+BATH_MAP_LAYER = 'bath-map-layer'
+SSP_MAP_LAYER = 'ssp-map-layer'
+SEABED_MAP_LAYER = 'seabed-map-layer'
 TRANS_MAP_LAYER = 'transect-map-layer'
 BATH_PLOT ='bath-plot'
 SSP_PLOT = 'soundSpeedProfilePlot'
@@ -51,3 +53,7 @@ TRANSECT_PLOT = 'transect-figure-plot'
 META_DATA_STORE='dachshunds-are-the-best-dogs'
 BATH_INPUTS_STORE = 'bath-inputs-store'
 SSP_INPUTS_STORE = 'ssp-inputs-store'
+SEABED_INPUTS_STORE = 'seabed-inputs-store'
+
+SEABED_SLIDER = 'seabed-slider'
+SEABED_TABLE = 'seabed-table'
