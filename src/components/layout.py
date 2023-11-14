@@ -3,8 +3,7 @@ import dash_bootstrap_components as dbc
 #from . import card_dropdown
 from . import map_fig, bathplot, ssplot, genOptCard, bathOptCard,ids,sspOptCard,alerts,tabs
 
-#dropdown1 = card_dropdown.dropDown('1','Card 1')
-#dropdown2 = card_dropdown.dropDown('2','Card 2')
+
 
 def create_layout(app: Dash) -> html.Div:
     return html.Div(
