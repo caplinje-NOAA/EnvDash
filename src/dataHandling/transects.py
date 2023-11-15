@@ -14,7 +14,7 @@ from .geoTools import lineLength
 from .bathretriever import bathdata
 
 
-def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate'):
+def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate', truncate=False):
 
     
     def toPixel(coord_latlon):
@@ -55,11 +55,22 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate'):
         return 
     
     r = np.zeros_like(transect)
-    
-    for i,(lonVal,latVal) in enumerate(zip(lon,lat)):
-        r[i] = lineLength(sLat, sLon, latVal, lonVal)
-        # if using pyproj import here
-        #r[i] = geod.line_length([startCoord[1],lonVal],[startCoord[0],latVal])
+ 
+    if truncate:
+        for i,(lonVal,latVal,trans) in enumerate(zip(lon,lat,transect)):
+            r[i] = lineLength(sLat, sLon, latVal, lonVal)
+            if trans>0:
+                r= r[:i]
+                transect=transect[:i]
+                break
+                
+        
+            # if using pyproj import here
+            #r[i] = geod.line_length([startCoord[1],lonVal],[startCoord[0],latVal])
+    else:
+        for i,(lonVal,latVal) in enumerate(zip(lon,lat)):
+            r[i] = lineLength(sLat, sLon, latVal, lonVal)
+        
         
     
     return r, transect

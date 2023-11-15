@@ -11,7 +11,7 @@ geod = Geod(ellps="WGS84")
 
 
 # !! coupling warning, many modules depend on content of bounding box
-@dataclass
+@dataclass(eq=True)
 class boundingBox:
     north:float
     south:float
@@ -21,6 +21,8 @@ class boundingBox:
     cLat:float
     cLon:float
     halfwidth_km:float
+    
+
     
 def getBoundingBox(cLat:float,cLon:float,halfwidth_km:float)->boundingBox:
     """Calculate bounding coordinates based on center latitude and longitude and a half-box-width distance in km"""
@@ -33,6 +35,9 @@ def getBoundingBox(cLat:float,cLon:float,halfwidth_km:float)->boundingBox:
     
     return boundingBox(north, south, east, west, cLat, cLon, halfwidth_km)
 
+def BBfromDict(inputs:dict):
+    """expects keys center=[lat,lon] and km=km"""
+    return getBoundingBox(inputs['center'][0], inputs['center'][1], inputs['km'])
 
 def getEndCoord(sLat,sLon,az,km):
     

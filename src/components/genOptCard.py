@@ -10,8 +10,12 @@ from dash import Dash, html,State, dcc, no_update
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
+# plotting imports
+import dash_leaflet as dl
+
 # project imports
-from . import ids,bathplot, ssplot
+from . import ids,bathplot, ssplot, text
+from ..dataHandling.geoTools import boundingBox, getBoundingBox
 
 
 metadataStore = dcc.Store(id=ids.META_DATA_STORE, storage_type='session')
@@ -72,8 +76,19 @@ card = dbc.Card(
     style={"width": "100%"},
 )
 
-# dictionary container of render methods for each tab
 
+def buildMapLayers(BB:boundingBox):
+    """Builds rectangle showing bounding box and center marker"""
+    
+    rectangle = dl.Rectangle(bounds=[[BB.north, BB.west], [BB.south, BB.east]],
+                             fill=False,
+                             id=ids.unique())
+    
+    marker =  dl.Marker(position=[BB.cLat,BB.cLon],                         
+                        children=dl.Tooltip(f"Center, {text.coordToStr(BB.cLat,BB.cLon)}",id=ids.unique())
+                        ,id=ids.unique())
+    
+    return [rectangle, marker]
 
 def render(app: Dash) -> html.Div:
  
@@ -84,6 +99,7 @@ def render(app: Dash) -> html.Div:
     Output(ids.SEABED_INPUTS_STORE,'data'),
     Output(ids.LAT_INPUT_START, 'value',allow_duplicate=True),
     Output(ids.LON_INPUT_START, 'value',allow_duplicate=True),
+    Output(ids.BB_MAP_LAYER, "children"),
 
     
     [Input(ids.GET_DATA_BUTTON, "n_clicks"),
@@ -104,20 +120,25 @@ def render(app: Dash) -> html.Div:
     )
     def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,n_seabed,bathInputs,sspInputs,seabedInputs):
         """This is the main callback of the app, being the duplicate output of all callbacks that trigger
-        a data update.  Gathers all data and updates most content"""
+        a data update.  Gathers all data and updates most content, also manages the BB map layers"""
         
         if n is None:
             return None
         else:
-            center = [lat,lon]
             
+
+            # set new inputs
+      
+            newBathInputs = {'center':[lat,lon],'km':km,'source':bathsource}
+            newsspInputs = {'center':[lat,lon],'km':km,'month':month}
+            newSeabedInputs = {'center':[lat,lon],'km':km,'n':n_seabed}
+            
+            # default all data stores to no_update
             bathOut = no_update
             sspOut = no_update
             seabedOut = no_update
-            newBathInputs = {'center':center,'km':km,'source':bathsource}
-            newsspInputs = {'center':center,'km':km,'month':month}
-            newSeabedInputs = {'center':center,'km':km,'n':n_seabed}
-            
+
+            # check each tab to see if data should be updated            
             if (tab_value=='bath-tab') and (newBathInputs !=bathInputs):
                 bathOut = newBathInputs
                 
@@ -127,15 +148,11 @@ def render(app: Dash) -> html.Div:
             if (tab_value=='seabed-tab') and (newSeabedInputs !=seabedInputs):
                 seabedOut = newSeabedInputs
                 
-                
-            # secondary child div contains transects for the bath tab
-            # passing the child through this callback allows it to remain
-            # 
-          
-            
+            BB = getBoundingBox(lat, lon, km)
+            BBmapLayer = buildMapLayers(BB)
 
     
-            return bathOut,sspOut,seabedOut, lat, lon
+            return bathOut,sspOut,seabedOut, lat, lon, BBmapLayer
    
 
 

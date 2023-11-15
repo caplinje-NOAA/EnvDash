@@ -65,10 +65,30 @@ hr {
     }
 }
 
+.marker-cluster-small-mud {
+	background-color: rgba(153,101,21, 0.8);
+	}
+	
+.marker-cluster-small-sand {
+	background-color: rgba(220, 201, 175, 0.8);
+	}
 
+.marker-cluster-small-gravel {
+	background-color: rgba(129, 129, 130, 0.8);
+	}
+.marker-cluster-small-silt {
+	background-color: rgba(150, 75, 0, 0.8);
+	}
+	
+.marker-cluster-small-clay {
+	background-color: rgba(178, 185, 181, 0.8);
+	}
+	
+	
+	
 
 .marker-cluster-small {
-	background-color: rgba(181, 226, 140, 0.6);
+	background-color: rgba(250, 250, 250, 0.3);
 	}
 .marker-cluster-small div {
 	background-color: rgba(110, 204, 57, 0.6);

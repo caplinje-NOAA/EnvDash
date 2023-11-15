@@ -13,11 +13,7 @@ from dash.dependencies import Input, Output
 # project imports
 from . import ids, text
 
-from ..dataHandling.read_usSeabed import getBoundedData
-
-
-
-
+# number of observations slider
 obsSlider =     dcc.Slider(5, 50, 5,
                value=10,
                id=ids.SEABED_SLIDER
@@ -46,19 +42,19 @@ card = dbc.Card(
 
 
 def render(app: Dash) -> html.Div:
-    # callback for changes to the month dropdown
-    # changing the month triggers a data update and chains to primary callback in gen opts
-    # @callback(
-    #     Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True), 
+    # callback for changes to number of points on slider
+    # triggers a data update and chains to primary callback in gen opts
+    @callback(
+        Output(ids.GET_DATA_BUTTON, "n_clicks",allow_duplicate=True), 
         
-    #     [Input(ids.SSP_MONTH_DROPDOWN,'value'),
-    #     State(ids.GET_DATA_BUTTON, "n_clicks")],
-    #     prevent_initial_call=True
-    #     )
-    # def update_month(value,n):
+        [Input(ids.SEABED_SLIDER,'value'),
+        State(ids.GET_DATA_BUTTON, "n_clicks")],
+        prevent_initial_call=True
+        )
+    def update_number(value,n):
 
                 
-    #     return n+1
+        return n+1
 
     return html.Div(
         [

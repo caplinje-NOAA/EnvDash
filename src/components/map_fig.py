@@ -42,7 +42,7 @@ def render(app: Dash) -> html.Div:
 
     return html.Div([
             dl.Map([dl.TileLayer(),
-                    dl.LayerGroup(id=ids.BATH_MAP_LAYER),
+                    dl.LayerGroup(id=ids.BB_MAP_LAYER),
                     dl.LayerGroup(id=ids.SSP_MAP_LAYER),
                     dl.LayerGroup(id=ids.SEABED_MAP_LAYER),
                     

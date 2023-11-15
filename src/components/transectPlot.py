@@ -67,7 +67,7 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
                     eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
             
                
-                    r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
+                    r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,truncate=True)
             
                     fig.add_trace(px.line(x=r,y=transect).data[0])
                     mapLayers.append(drawTransects([sLat,sLon], [eLat,eLon]))

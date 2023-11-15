@@ -14,7 +14,7 @@ import dash_leaflet as dl
 
 # project imports
 from ..dataHandling.bathretriever import retrieve
-from ..dataHandling.geoTools import getBoundingBox, boundingBox
+from ..dataHandling.geoTools import boundingBox, BBfromDict
 from . import ids, alerts
 
 
@@ -64,17 +64,12 @@ def buildFigure(bathdata,BB:boundingBox,source:str)->dcc.Graph:
     #figure = dcc.Graph(figure=fig,style={'width': '60vh', 'height': '60vh'},id=ids.BATH_PLOT)
     return fig
 
-def buildMapLayers(BB:boundingBox):
-    """Builds rectangle showing bounding box and center marker"""
-    mapLayers = [dl.Rectangle(bounds=[[BB.north, BB.west], [BB.south, BB.east]],children=dl.Tooltip("Bounding box for bathymetry")),
-                 dl.Marker(position=[BB.cLat,BB.cLon], children=dl.Tooltip(f"Center, [{BB.cLat:.3f}, {BB.cLon:.3f}]"))]
-    return mapLayers
+
     
 def render(app: Dash) -> html.Div:
     @app.callback(
-    # outputs are the two object/figure containers, any map layers, and the alert div    
+    # outputs only the bath figure and alert  
     Output(ids.BATH_PLOT, 'figure'),
-    Output(ids.BATH_MAP_LAYER, "children"),
     Output(ids.ALERT, "children", allow_duplicate=True), 
     
     [Input(ids.BATH_INPUTS_STORE, "data"),   
@@ -83,28 +78,21 @@ def render(app: Dash) -> html.Div:
      
     )
     def updatePlot(inputs):
-        #coord_lat_lon,km,month,bathsource,prevMetaData
-        #metaData= {'center':coord_lat_lon,'km':km,'source':bathsource}
-        coord_lat_lon = inputs['center']
-        km = inputs['km']
+        # unpack inputs
         bathsource = inputs['source']
-      
-        """Bath plot renderer"""
-        # calculate bounding box
-        BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
+        BB = BBfromDict(inputs)
+
         
         # get data 
-    
         bathdata = retrieve(BB,DataSet=bathsource, downSample=figureDownSampling[bathsource],downCast=dataDowncast[bathsource])
         print(bathdata.error)
         
-        mapLayers = buildMapLayers(BB)
       
         # handle request errors
         if bathdata.error:
             figure = go.Figure()
             alert = alerts.getAlert('danger',bathdata.error)
-            return figure, mapLayers, alert
+            return figure, alert
     
         else:
             
@@ -113,7 +101,7 @@ def render(app: Dash) -> html.Div:
        
             figure = buildFigure(bathdata,BB,bathsource)
         
-            return figure, mapLayers, alert
+            return figure, alert
         
     return html.Div([bathContent,inputsStore])
     

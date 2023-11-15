@@ -100,6 +100,9 @@ def getBoundedData(BB:boundingBox,num,useFile='abbreviated',appendDistances=True
     latRange = [BB.south,BB.north]
     lonRange = [BB.west,BB.east]
     indices, distances, total = getDataIndices(gridLat,gridLon,latRange,lonRange,BB.cLat,BB.cLon,num = num)
+    
+    if len(indices)==0:
+        return None, 0
  
     return getSubFrame(indices,distances,useFile=useFile,appendDistances=appendDistances), total
     

@@ -1,0 +1,140 @@
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: (g)M
+Enumerated_Domain_Value_Definition: Slightly gravelly mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: (g)mS
+Enumerated_Domain_Value_Definition: Slightly gravelly muddy sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: (g)sM
+Enumerated_Domain_Value_Definition: Slightly gravelly sandy mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: (g)S
+Enumerated_Domain_Value_Definition: Slightly gravelly sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: G
+Enumerated_Domain_Value_Definition: Gravel
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: gM
+Enumerated_Domain_Value_Definition: Gravelly mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: (s)gM
+Enumerated_Domain_Value_Definition: Slightly gravelly mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: gmS
+Enumerated_Domain_Value_Definition: Gravelly muddy sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: gsM
+Enumerated_Domain_Value_Definition: Gravelly sandy mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: gS
+Enumerated_Domain_Value_Definition: Gravelly sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: M
+Enumerated_Domain_Value_Definition: Mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: mG
+Enumerated_Domain_Value_Definition: Muddy gravel
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: mS
+Enumerated_Domain_Value_Definition: Muddy sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: msG
+Enumerated_Domain_Value_Definition: Muddy sandy gravel
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: S
+Enumerated_Domain_Value_Definition: Sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: sG
+Enumerated_Domain_Value_Definition: Sandy gravel
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: sM
+Enumerated_Domain_Value_Definition: Sandy mud
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: zS
+Enumerated_Domain_Value_Definition: Silty sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: cS
+Enumerated_Domain_Value_Definition: Clayey sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: sZ
+Enumerated_Domain_Value_Definition: Sandy silt
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: sC
+Enumerated_Domain_Value_Definition: Sandy clay
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: Z
+Enumerated_Domain_Value_Definition: Silt
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: C
+Enumerated_Domain_Value_Definition: Clay
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: cZ
+Enumerated_Domain_Value_Definition: Clayey silt
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: czS
+Enumerated_Domain_Value_Definition: Clayey silty sand
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: scZ
+Enumerated_Domain_Value_Definition: Sandy clayey silt
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: szC
+Enumerated_Domain_Value_Definition: Sandy silty clay
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software
+Attribute_Domain_Values:
+Enumerated_Domain:
+Enumerated_Domain_Value: zC
+Enumerated_Domain_Value_Definition: Silty clay
+Enumerated_Domain_Value_Definition_Source: dbSEABED processing software

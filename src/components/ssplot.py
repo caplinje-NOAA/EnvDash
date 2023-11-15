@@ -6,7 +6,7 @@ This module handles the rendering of SSP data
 """
 
 # dash imports
-from dash import dcc, Dash, html, Output, State, Input
+from dash import dcc, Dash, html, Output, Input
 
 # data science imports
 import pandas as pd
@@ -17,23 +17,23 @@ import dash_leaflet as dl
 
 # project imports
 from ..dataHandling.sspretriever import retrieveSSprofiles
-from ..dataHandling.geoTools import getBoundingBox, boundingBox
-from . import ids, alerts
+from ..dataHandling.geoTools import boundingBox, BBfromDict
+from . import ids, alerts, text
+
 
 inputsStore = dcc.Store(id=ids.SSP_INPUTS_STORE, storage_type='session', data={})
 
+print(ids.SSP_PLOT)
+figure = html.Div(dcc.Graph(figure=px.line(),style={'width': '60vh', 'height': '60vh'},id=ids.SSP_PLOT))
+
+
+
+
 soundSpeedContent = dcc.Loading(
                     id=ids.SSP_TAB_CONTENT,
-                    children=[html.Div()],
+                    children=[figure],
                     type="circle",
                 ) 
-
-def decodeCoord(coordstr:str)->[float]:
-    """convert string coordinate [lat,lon] to [float]"""
-    stringArray = coordstr.strip('[').strip(']').split(',')
-    lat = float(stringArray[0])
-    lon = float(stringArray[1])
-    return [lat,lon]
 
 
 def buildFig(df:pd.DataFrame,BB:boundingBox,month:str)->html.Div:   
@@ -42,25 +42,27 @@ def buildFig(df:pd.DataFrame,BB:boundingBox,month:str)->html.Div:
         return None
     fig = px.line(df,x='C',y='depth',color='Coordinate')
     
-    fig.update_layout(title=f'{month} SSP near [{BB.cLat:.3f},{BB.cLon:.3f}]',
+    fig.update_layout(title=f'{month} SSP near {text.coordToStr(BB.cLat,BB.cLon)}',
                xaxis_title='Sound Speed (m/s)',
                yaxis_title='Depth (m)')
     
     fig['layout']['yaxis']['autorange'] = "reversed"
     
-    figure = html.Div(dcc.Graph(figure=fig,style={'width': '60vh', 'height': '60vh'}, id=ids.SSP_PLOT))
+
     
-    return figure
+    return fig
     
 def buildMapMarkers(df:pd.DataFrame,BB:boundingBox):
     """builds an array of dl.Circle items of each SSP point"""
+    """text and ids managed by text.py and ids.py"""
     markers = []
     locations = df['Coordinate'].unique()
     for loc in locations:
-        center = decodeCoord(loc)
+        center = text.strToCoord(loc)
+        print(center)
         markers.append(
-            dl.Circle(center=center,radius=500,children=dl.Tooltip(f'WOA (SSP) data, {loc}'), 
-                      id={'type':ids.WOA_DATA_MARKER,'location':loc},color='blue',opacity=1)
+            dl.Circle(center=center,radius=500,children=dl.Tooltip(f'WOA (SSP) data, {loc}',id=ids.SSP_MARKER_TOOLTIP(loc)), 
+                      id=ids.SSP_MARKER(loc),color='blue',opacity=1)
                       )
             
     return markers
@@ -74,8 +76,8 @@ def buildMapLayers(df,BB:boundingBox):
     
 def render(app:Dash)->html.Div:
     @app.callback(
-    # outputs are the two object/figure containers, any map layers, and the alert div    
-    Output(ids.SSP_TAB_CONTENT, 'children'),
+    # Updates the figure, sets map layers, and posts alert  
+    Output(ids.SSP_PLOT, 'figure'),
     Output(ids.SSP_MAP_LAYER, "children"),
     Output(ids.ALERT, "children", allow_duplicate=True), 
     
@@ -87,26 +89,24 @@ def render(app:Dash)->html.Div:
     def updatePlot(inputs):
         """ Sound speed renderer function in the same template as the other tab content"""   
     
-        coord_lat_lon = inputs['center']
-        km = inputs['km']
+        # unpack inputs
+        BB = BBfromDict(inputs)
         month = inputs['month']
-
-        # construct bounding box
-        BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
        
         # get profiles
         df = retrieveSSprofiles(BB,Month=month,as_DataFrame=True)
        
         # figure and layers
-        figure = buildFig(df,BB,month)    
+        fig = buildFig(df,BB,month)    
         mapLayers = buildMapLayers(df,BB)
+        
         if not figure:
-            alert = alerts.getAlert(alerts.warning,'No WOA data for this time/area, either expand the region or select a different month.',duration = 8000)
+            alert = alerts.getAlert(alerts.warning,text.no_SSP_alert,duration = 8000)
         else:
-            alert = alerts.getAlert('success','Successfully loaded WOA temperature and sailinity data.')
+            alert = alerts.getAlert(alerts.success,text.SSP_success)
       
         
-        return figure, mapLayers, alert
+        return fig, mapLayers, alert
     return html.Div([soundSpeedContent,inputsStore])
 
 

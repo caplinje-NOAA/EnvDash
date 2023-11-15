@@ -1,11 +1,13 @@
+import uuid
+
 MAP = "map"
 MAP_FIG = 'map-fig'
-BATH_MAP_LAYER = 'bath-map-layer'
+BB_MAP_LAYER = 'bath-map-layer'
 SSP_MAP_LAYER = 'ssp-map-layer'
 SEABED_MAP_LAYER = 'seabed-map-layer'
 TRANS_MAP_LAYER = 'transect-map-layer'
 BATH_PLOT ='bath-plot'
-SSP_PLOT = 'soundSpeedProfilePlot'
+SSP_PLOT = 'ssp-plot'
 LAT_INPUT = 'latitude-input'
 LON_INPUT = 'longitude-input'
 GET_DATA_BUTTON='get-data-button'
@@ -22,7 +24,6 @@ BATH_ERROR = 'bath-error'
 ALERT = 'alert-div'
 
 SSP_MONTH_DROPDOWN ='SSP-month-dropdown'
-WOA_DATA_MARKER = 'WOA-data-marker'
 SSP_EXCLUDE_DROPDOWN = 'ssp-include'
 OPTION_DIV = 'options-div'
 FIGURE_DIV = 'figure-div'
@@ -57,3 +58,16 @@ SEABED_INPUTS_STORE = 'seabed-inputs-store'
 
 SEABED_SLIDER = 'seabed-slider'
 SEABED_TABLE = 'seabed-table'
+
+def SSP_MARKER(loc):
+    return {'type':'WOA-data-marker','location':loc}
+
+def SSP_MARKER_TOOLTIP(loc):
+    return {'type':'WOA-data-marker-tooltip','location':loc}
+
+def unique()->str:
+    return str(uuid.uuid1())
+    
+    
+    
+    

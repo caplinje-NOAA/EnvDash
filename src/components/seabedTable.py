@@ -6,17 +6,16 @@ Created on Sun Nov 12 17:22:54 2023
 """
 
 # dash imports
-from dash import dcc, Dash, html, Output, State, Input, dash_table
+from dash import dcc, Dash, html, Output, Input, dash_table
 import dash_bootstrap_components as dbc
 
 # plotting imports
-import plotly.graph_objects as go
 import dash_leaflet as dl
 
 # project imports
 from ..dataHandling.read_usSeabed import getBoundedData
-from ..dataHandling.geoTools import getBoundingBox, boundingBox
-from . import ids, alerts
+from ..dataHandling.geoTools import BBfromDict
+from . import ids, alerts, text
 
 
 
@@ -33,14 +32,7 @@ seabedTableDiv  =   dcc.Loading(
 
 inputsStore = dcc.Store(id=ids.SEABED_INPUTS_STORE, storage_type='session',data={})
 
-def divMarker(lat:float,lon:float,text:str,hovertext):
-        icon = dict(
-        html=f'<div><span> {text} </span></div>',
-        className='marker-cluster marker-cluster-small',
-        iconSize=[40, 40]
-    )
-        marker = dl.DivMarker(position=[lat,lon], iconOptions=icon, riseOnHover=True,children=[dl.Tooltip(content=hovertext)])
-        return marker
+
 
 def popTable(df)->dbc.Table:
     """ actual bathymetry plot"""
@@ -50,15 +42,44 @@ def popTable(df)->dbc.Table:
     #table = html.Div()
     return table
 
+# dynamic class names based on major constituent for marker colors
+classNames = {'M':'marker-cluster-small-mud',
+              'S':'marker-cluster-small-sand',
+              'G':'marker-cluster-small-gravel',
+              'Z':'marker-cluster-small-silt',
+              'C':'marker-cluster-small-clay',
+              '-':'marker-cluster-small'}
+
 def buildMapLayers(df):
     """Builds Folk Code Based Markers"""
     
+    # empty children container
     layerChildren = []
     for index, row in df.iterrows():
-        gravel,sand,mud,clay = row['Gravel'],row['Sand'],row['Mud'],row['Clay']
         
-        title = f'({gravel}% G, {sand}% S, {mud}% M, {clay}% clay), Distance = {row["distance (m)"]/1000:.2f} km  '
-        layerChildren.append(divMarker(row['Latitude'],row['Longitude'],row['FolkCde'],title))
+        markerID = row.to_dict()   
+     
+        coloredClassName = classNames[row["FolkCde"][-1]]
+        print(coloredClassName,row["FolkCde"],row["FolkCde"][-1])
+        hovertext = f'{text.folkCodes[row["FolkCde"]]}, Distance = {row["distance (m)"]/1000:.2f} km  '
+        
+        icon = dict(
+            html=f'<div><span> {row["FolkCde"]} </span></div>',
+            className=f'marker-cluster {coloredClassName}',
+            iconSize=[40, 40]
+        )
+        # build markers, note that marker ids are dictionaries of each row
+        # while tooltip ids are random uids
+        marker = dl.DivMarker(position=[row['Latitude'],row['Longitude']],
+                              iconOptions=icon,
+                              riseOnHover=True,
+                              children=[dl.Tooltip(content=hovertext,id=ids.unique())],
+                              id = ids.unique()
+                              )
+        
+        layerChildren.append(marker)
+        
+        
     return layerChildren
     
 def render(app: Dash) -> html.Div:
@@ -74,29 +95,22 @@ def render(app: Dash) -> html.Div:
       
       )
     def updateTable(inputs):
-        #coord_lat_lon,km,month,bathsource,prevMetaData
-        #metaData= {'center':coord_lat_lon,'km':km,'source':bathsource}
-        coord_lat_lon = inputs['center']
-        km = inputs['km']
+
+        # unpack inputs
+        BB = BBfromDict(inputs)
         n = inputs['n']
      
-        """Bath plot renderer"""
-        # calculate bounding box
-        BB = getBoundingBox(coord_lat_lon[0], coord_lat_lon[1], km)
-       
         # get data 
         
         df,total = getBoundedData(BB,n)
-        #print(type(df))
+        
+        if total==0:
+            alert = alerts.getAlert(alerts.warning,text.no_seabed_alert)
+            return html.Div(), html.Div(), alert
+            
         table = popTable(df)
-
-       
         mapLayers = buildMapLayers(df)
-     
-       
-           
-        # return rendered objects
-        alert = alerts.getAlert('success',f'Successfully loaded seabed data.')
+        alert = alerts.getAlert(alerts.success,text.seabed_success)
   
      
    
