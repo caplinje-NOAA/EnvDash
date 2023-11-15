@@ -176,7 +176,6 @@ def buildInputDict(ids:[dict],values:[],key)->dict:
         
     return inputs
 
-         
 
 def render(app: Dash) -> html.Div:
     ## Plot transect callback
