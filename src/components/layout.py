@@ -1,7 +1,7 @@
 from dash import Dash, html
 import dash_bootstrap_components as dbc
 #from . import card_dropdown
-from . import map_fig, bathplot, ssplot, genOptCard, bathOptCard,ids,sspOptCard,alerts,tabs
+from . import map_fig, bathplot, ssplot, genOptCard, bathOptCard,ids,sspOptCard,alerts,tabs,downloadsCanvas
 
 
 
@@ -33,7 +33,10 @@ def create_layout(app: Dash) -> html.Div:
            
                         html.Div(alerts.render(app)),
                         
-                        ])
+                        
+                        ]),
+            downloadsCanvas.render(app)
+            
             
             
                            

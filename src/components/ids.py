@@ -59,6 +59,19 @@ SEABED_INPUTS_STORE = 'seabed-inputs-store'
 SEABED_SLIDER = 'seabed-slider'
 SEABED_TABLE = 'seabed-table'
 
+DOWNLOAD_CANVAS_BUTTON = 'download-canvas-button'
+DOWNLOAD_CANVAS = 'download-canvas'
+DOWNLOAD_BATH_BUTTON = 'download-bath-button'
+BATH_INPUTS_DISPLAY = 'bath-inputs-display'
+
+SSP_FILE_TYPE_DROPDOWN = 'ssp-file-type-dropdown'
+SSP_DOWNLOAD_BUTTON = 'ssp-download-button'
+SSP_DOWNLOAD = 'ssp-download'
+SSP_INPUTS_DISPLAY = 'ssp-inputs-display'
+SEABED_DOWNLOAD_BUTTON = 'seabed-download-button'
+SEABED_DOWNLOAD = 'seabed-download'
+SEABED_INPUTS_DISPLAY = 'seabed-inputs-display'
+
 def SSP_MARKER(loc):
     return {'type':'WOA-data-marker','location':loc}
 

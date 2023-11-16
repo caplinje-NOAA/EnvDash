@@ -58,7 +58,7 @@ def unpackData(matdata,structname,variable, downSample,landMask=10.0,downCast=Fa
     return bathdata(lat=lat,lon=lon,topo=topo,error=None)
    
 
-def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None, downCast=False)->bathdata:
+def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None, downCast=False,returnOnlyRequest=False)->bathdata:
     """ perform http request and download bath data"""
            
     lonRange = [BB.west,BB.east]
@@ -139,10 +139,14 @@ def retrieve(BB:boundingBox, DataSet='SRTM',downSample=None, downCast=False)->ba
     
     query = f'?{variable}%5B({latRange[1]:.4f}):1:({latRange[0]:.4f})%5D%5B({lonRange[0]:.4f}):1:({lonRange[1]:.4f})%5D'
     fullurl = f'{host}{filename}{query}'
-
+    
+    if returnOnlyRequest:
+        return fullurl
   
     matdata,r = tempRequests.getData(fullurl, scipy.io.loadmat)
-    
+    if r==-1:
+        return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable. Server timeout.')
+        
     # request error handling 
     if r.status_code == 404:
         return bathdata(lat=None,lon=None,topo=None,error='ERDDAP Server Temporarily Unavailable.')

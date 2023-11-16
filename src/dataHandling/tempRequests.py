@@ -9,6 +9,7 @@ This module handles http requests and treats downloads as temporary files which 
 import tempfile
 from io import BytesIO
 import time
+
 # non-standard
 import requests
 
@@ -22,7 +23,11 @@ def getData(request:str,readMethod:callable,**kwargs):
     
     start = time.time()
     # open request
-    r = requests.get(request,stream=True)
+    try:
+        r = requests.get(request,stream=True, timeout=10)
+    except requests.exceptions.Timeout:
+        print(f'server timeout for request: {request}')
+        return None, -1
     
     if r.status_code==requests.codes.ok:
         # if request is okay, open tempory file (to be deleted out of scope)

@@ -43,7 +43,7 @@ transectOptsDropdown = html.Div(
 plotTransectButton = dbc.Button(
      "Plot",
      id=ids.PLOT_TRANSECTS_BUTTON_S,
-     className="dropdown-button",
+     className="button",
      color="primary",
      n_clicks=0,
  )
@@ -113,7 +113,7 @@ transect_inputs_dict = {text.transect_single: singleCoordOpts,text.transect_sing
 collapseButton = dbc.Button(
     "Transects",
     id=ids.TRANSECT_COLLAPSE_BUTTON,
-    className="dropdown-button",
+    className="button",
     color="primary",
     n_clicks=0,
 )

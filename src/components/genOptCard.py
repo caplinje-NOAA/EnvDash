@@ -47,13 +47,16 @@ boxSizeInput = dbc.InputGroup(
             className="mb-3",
         )
 
-button = html.Div(
-    [
-        dbc.Button(
-            "Retrieve Data", id=ids.GET_DATA_BUTTON, className="me-2", n_clicks=0
-        ),
-       
+buttonRow = html.Div(
+    [   dbc.Row(
+        [     
+            dbc.Col(dbc.Button("Retrieve Data", id=ids.GET_DATA_BUTTON, className="button", n_clicks=0)),
+            dbc.Col(dbc.Button("Download Data", id=ids.DOWNLOAD_CANVAS_BUTTON, className="button", n_clicks=0)),
+            
+        ]
+      )
     ]
+        
 )
 
 # coniguration card to open canvas and display current configuration
@@ -66,7 +69,7 @@ card = dbc.Card(
                 latInput,
                 lonInput,
                 boxSizeInput,
-                button
+                buttonRow
                 
                 ,
         
