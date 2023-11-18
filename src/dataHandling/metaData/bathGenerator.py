@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#CRM META DATA GENERATING CODE
+# Converts old meta data schema to new list of dictionaries (as found in bathymetry.py adjacent)
 CRM_datasets = {'vol1':'noaa_ngdc_5a67_fa8e_35e2',
                 'vol10':'noaa_ngdc_c143_8b2d_0582',
                 'vol2':'noaa_ngdc_5801_62a2_09a4',

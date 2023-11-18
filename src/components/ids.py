@@ -7,6 +7,7 @@ SSP_MAP_LAYER = 'ssp-map-layer'
 SEABED_MAP_LAYER = 'seabed-map-layer'
 TRANS_MAP_LAYER = 'transect-map-layer'
 BATH_PLOT ='bath-plot'
+
 SSP_PLOT = 'ssp-plot'
 LAT_INPUT = 'latitude-input'
 LON_INPUT = 'longitude-input'

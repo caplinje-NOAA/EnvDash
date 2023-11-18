@@ -9,10 +9,13 @@ from dash import Dash, dcc, html,State
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, ALL
 
+# data science imports
+import numpy as np
+
 # project imports
 from . import ids, text
 from .transectPlot import plotTransects
-from ..dataHandling.bathretriever import retrieve
+from ..dataHandling.bathretriever import retrieve, bathdata
 from ..dataHandling.geoTools import getBoundingBox
 from .custom import inputGroups as ig
 
@@ -31,6 +34,7 @@ radialInput = ig.inputGroup('Radial Step', 'degrees', ids.RADIAL_STEP_INPUT)
 # Stride slider
 strideSlider =     dcc.Slider(1,10,1,
                value=1,
+
                id=ids.STRIDE_SLIDER
     )
 
@@ -208,22 +212,28 @@ def render(app: Dash) -> html.Div:
         State(ids.LON_INPUT,'value'),
         State(ids.BB_KM,'value'),
         State(ids.BATH_SOURCE_DROPDOWN,'value'),
+        State(ids.BATH_PLOT, 'figure')
       
         )
-    def plot_transects(n,transectType,parameterValues,parameterIDs,lat_pnt,lon_pnt,km,bathsource):
+    def plot_transects(n,transectType,parameterValues,parameterIDs,lat_pnt,lon_pnt,km,bathsource,bathfig):
         if n:
+            print(bathfig['data'][0]['x'])
             # get bath data
             BB = getBoundingBox(lat_pnt, lon_pnt, km)
             print(BB)
  
             print('Getting Bath Data')
-            bathdata = retrieve(BB,DataSet=bathsource,downCast=False)
+            data = bathdata(lat=np.array(bathfig['data'][0]['y']),
+                            lon = np.array(bathfig['data'][0]['x']),
+                            topo= np.array(bathfig['data'][0]['z']),
+                            error = None)
+            #bathdata = retrieve(BB,DataSet=bathsource,downCast=False)
             
             # convert list inputs to dictionary, high coupling warning here
             inputs = buildInputDict(parameterIDs,parameterValues,'parameter')
             inputs['km']=km
             
-            figure,mapLayers = plotTransects(bathdata, transectType, inputs)
+            figure,mapLayers = plotTransects(data, transectType, inputs)
         
 
             return mapLayers,figure

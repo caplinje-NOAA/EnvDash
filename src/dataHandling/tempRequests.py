@@ -13,9 +13,10 @@ import time
 # non-standard
 import requests
 
+# still don't know whats best here...
 chunk_size_mb = 1
 chunk_size = int(1024*1024*chunk_size_mb)
-chunk_size=128
+
     
 def getData(request:str,readMethod:callable,**kwargs):
     """Retrieves arbitrary data via http request using a temporary file (deleted during calls to this function).

@@ -50,7 +50,8 @@ def buildFigure(bathdata,BB:boundingBox,source:str)->dcc.Graph:
             y=bathdata.lat,# vertical axis
             colorbar=dict(
         title='Depth (m)', # title here
-        titleside='right')
+        titleside='right'),
+            
         ))
     fig.update_layout(title=f'{source} bathymetry Contour near [{BB.cLat:.3f},{BB.cLon:.3f}]',
                xaxis_title='Longitude (degrees E)',
