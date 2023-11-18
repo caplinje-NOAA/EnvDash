@@ -16,7 +16,8 @@ from ..dataHandling.bathretriever import retrieve
 from ..dataHandling.geoTools import getBoundingBox
 from .custom import inputGroups as ig
 
-
+# set to 10 for debugging
+strideDefaults = {'CRM':10,'SRTM':10}
 #### Build Components of card
 ## Input groups for transects
 latInputStart = ig.inputGroup('Start Latitude', 'degrees N', ids.LAT_INPUT_START)
@@ -27,6 +28,11 @@ singleAzInput = ig.inputGroup('Azimuth', 'degrees rel. N', ids.AZ_INPUT)
 radialInput = ig.inputGroup('Radial Step', 'degrees', ids.RADIAL_STEP_INPUT)
 
 
+# Stride slider
+strideSlider =     dcc.Slider(1,10,1,
+               value=1,
+               id=ids.STRIDE_SLIDER
+    )
 
 
 # dropdown menu to select transect type
@@ -34,7 +40,10 @@ transectOptsDropdown = html.Div(
     [
         dcc.Dropdown([text.transect_single, text.transect_singleAz, text.transect_multiple], text.transect_single, 
                      id=ids.TRANSECT_DROPDOWN,
-                     className ="mb-3"),
+                     className ="mb-3",
+                     clearable = False,
+                     searchable = False,
+                     ),
        
     ]
 )
@@ -149,8 +158,14 @@ card = dbc.Card(
         dbc.CardBody(
             [
                 html.H4("Bathymetry Options", className="card-title"),
-                html.H6("Data Source:", className="card-title"),
-                BathSourceDropdown,
+                dbc.Row([
+                    dbc.Col(html.H6("Data Source:", className="card-title")),
+                    dbc.Col(html.H6("Stride (Controls resolution, higher stride = lower resolution, but faster plotting):", className="card-title")),
+                    ]),
+                dbc.Row([
+                    dbc.Col(BathSourceDropdown),
+                    dbc.Col(strideSlider),
+                            ]),
                 collapse,
                 #dbc.Toast(html.H6(id=ids.BATH_ERROR),header="Data Status:")
 
@@ -256,6 +271,15 @@ def render(app: Dash) -> html.Div:
          
                 
         return is_open
+    
+    # Callback which enables default stride values on bath dataset change
+    @app.callback(
+    Output(ids.STRIDE_SLIDER, "value"),      
+    Input(ids.BATH_SOURCE_DROPDOWN, "value"),
+    )
+    def update_stride(value):
+
+        return strideDefaults[value]
     
 
     return html.Div(

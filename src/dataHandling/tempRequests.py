@@ -15,6 +15,7 @@ import requests
 
 chunk_size_mb = 1
 chunk_size = int(1024*1024*chunk_size_mb)
+chunk_size=128
     
 def getData(request:str,readMethod:callable,**kwargs):
     """Retrieves arbitrary data via http request using a temporary file (deleted during calls to this function).
@@ -43,11 +44,12 @@ def getData(request:str,readMethod:callable,**kwargs):
                 output = readMethod(readFile,**kwargs)
             
     else:
+        print(f'REQUESTS STATUS CODE: {r.status_code}:{r.reason}:{r.text}')
         output=None
     elapsed = time.time()-start
     print(f'download time = {elapsed:.2f} seconds')
         
-    return output, r
+    return output
     
 
     

@@ -18,8 +18,9 @@ from ..dataHandling.geoTools import boundingBox, BBfromDict
 from . import ids, alerts
 
 
-figureDownSampling = {'SRTM':None,'CRM':256}
-dataDowncast = {'SRTM':False,'CRM':True}
+
+dataDowncast = {'SRTM':False,'CRM':False}
+
 # Container for left figure / object
 bathDiv  =        dcc.Loading(
                     id=ids.BATH_TAB_CONTENT,
@@ -84,7 +85,7 @@ def render(app: Dash) -> html.Div:
 
         
         # get data 
-        bathdata = retrieve(BB,DataSet=bathsource, downSample=figureDownSampling[bathsource],downCast=dataDowncast[bathsource])
+        bathdata = retrieve(BB,DataSet=bathsource, stride = inputs['stride'], downCast=dataDowncast[bathsource])
         print(bathdata.error)
         
       

@@ -60,7 +60,6 @@ seabedCard = dbc.Card(
                 html.Div(children=[
                     ], id=ids.SEABED_INPUTS_DISPLAY
                 ),
-                html.Div('File type:'),
                 dbc.Button("Download (.csv)", id=ids.SEABED_DOWNLOAD_BUTTON,class_name='button',external_link=True),
                 dcc.Download(id=ids.SEABED_DOWNLOAD)
             ]

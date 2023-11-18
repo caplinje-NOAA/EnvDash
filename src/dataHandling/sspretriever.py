@@ -17,7 +17,7 @@ from .geoTools import boundingBox
 from . import tempRequests
 
 
-## These strings are necessary to request the correct files from the ERDAP server
+## These strings are necessary to request the correct files from the ERDDAP server
 basetimes = ['1986-01-15T17:26:17.131Z','1986-02-15T03:55:20.963Z','1986-03-17T14:24:24.794Z','1986-04-17T00:53:28.625Z',
              '1986-05-17T11:22:32.456Z','1986-06-16T21:51:36.287Z','1986-07-17T08:20:40.119Z','1986-08-16T18:49:43.950Z',
              '1986-09-16T05:18:47.781Z','1986-10-16T15:47:51.612Z','1986-11-16T02:16:55.444Z','1986-12-16T12:45:59.275Z']
@@ -40,11 +40,11 @@ def getWOAdata(variable,statistic,month,BB:boundingBox):
      
     query = f'?var={var}&north={BB.north:.3f}&west={BB.west:.3f}&east={BB.east:.3f}&south={BB.south:.3f}&disableProjSubset=on&horizStride=1&time_start={basetime}&time_end={basetime}&timeStride=1&vertCoord=&accept=netcdf'   
     request = f'{host}{filename}{query}'
-    
-    data, r = tempRequests.getData(request, xr.open_dataset, decode_times=False)
+    print(request)
+    data = tempRequests.getData(request, xr.open_dataset, decode_times=False)
     
     if not data:
-        r.raise_for_status()
+        print('Unable to retrieve WOA data')
     
     return data
 
@@ -92,6 +92,7 @@ def retrieveSSprofiles(BB:boundingBox,Month='January',Statistic='mn',as_DataFram
   
     
     dataset_t = getWOAdata('temperature',Statistic,monthDict[Month],BB)
+    print(dataset_t)
     temp = dataset_t.isel(time=0)
     dataset_s = getWOAdata('salinity',Statistic,monthDict[Month],BB)
     sal = dataset_s.isel(time=0)

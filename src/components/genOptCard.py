@@ -112,6 +112,7 @@ def render(app: Dash) -> html.Div:
      State(ids.BB_KM,'value'),
      State(ids.SSP_MONTH_DROPDOWN,'value'),
      State(ids.BATH_SOURCE_DROPDOWN,'value'),
+     State(ids.STRIDE_SLIDER,'value'),
      State(ids.SEABED_SLIDER,'value'),
      State(ids.BATH_INPUTS_STORE,'data'),
      State(ids.SSP_INPUTS_STORE, 'data'),
@@ -121,7 +122,7 @@ def render(app: Dash) -> html.Div:
      prevent_initial_call=True
      
     )
-    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,n_seabed,bathInputs,sspInputs,seabedInputs):
+    def primary_app_callback(n,tab_value,lat,lon,km,month,bathsource,stride,n_seabed,bathInputs,sspInputs,seabedInputs):
         """This is the main callback of the app, being the duplicate output of all callbacks that trigger
         a data update.  Gathers all data and updates most content, also manages the BB map layers"""
         
@@ -132,7 +133,7 @@ def render(app: Dash) -> html.Div:
 
             # set new inputs
       
-            newBathInputs = {'center':[lat,lon],'km':km,'source':bathsource}
+            newBathInputs = {'center':[lat,lon],'km':km,'source':bathsource,'stride':stride}
             newsspInputs = {'center':[lat,lon],'km':km,'month':month}
             newSeabedInputs = {'center':[lat,lon],'km':km,'n':n_seabed}
             

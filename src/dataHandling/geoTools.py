@@ -50,3 +50,7 @@ def getEndCoord(sLat,sLon,az,km):
     
 def lineLength(startLat,startLon,endLat,endLon):
     return geod.line_length([startLon,endLon],[startLat,endLat])
+
+def toLon360(lon_180):
+    return 360+lon_180
+

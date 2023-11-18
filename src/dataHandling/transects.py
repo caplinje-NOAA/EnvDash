@@ -8,13 +8,14 @@ Method for calculating line transects from topographic data
 # data science imports
 import numpy as np
 import scipy.ndimage as snd
+import xarray as xr
 
 # project imports
-from .geoTools import lineLength
+from .geoTools import lineLength, getEndCoord
 from .bathretriever import bathdata
 
 
-def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate', truncate=False):
+def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate',maxPixelPoint =False, truncate=False, range_km=None):
 
     
     def toPixel(coord_latlon):
@@ -31,14 +32,23 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate', t
     # convert to pixel coords
     startPixelCoord = toPixel(startCoord)
     endPixelCoord = toPixel(endCoord)
-    
-    transLenPixels = int(np.round(np.hypot(startPixelCoord[0]-endPixelCoord[0],startPixelCoord[1]-endPixelCoord[1])))
 
     
     # define x dimension as longitude, in pixel coordinates ..... y ... latitude ....
-    
+    if maxPixelPoint:
+        if range_km:
+            endCoord45d = getEndCoord(sLat,sLon,45,range_km)
+            endPixelCoord45 = toPixel(endCoord45d)
+            transLenPixels = int(np.round(np.hypot(startPixelCoord[0]-endPixelCoord45[0],startPixelCoord[1]-endPixelCoord45[1])))
+        else:
+            print('if using maxPixelPoint, range_km must be specified')
+            return None, None
+        
+    else:
+        transLenPixels = int(np.round(np.hypot(startPixelCoord[0]-endPixelCoord[0],startPixelCoord[1]-endPixelCoord[1])))
+        
+        
     x = np.round(np.linspace(startPixelCoord[1],endPixelCoord[1],num=transLenPixels)).astype(int)
-    
     y = np.round(np.linspace(startPixelCoord[0],endPixelCoord[0],num=transLenPixels)).astype(int)
     
     if method=='nearest':
@@ -72,5 +82,54 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate', t
             r[i] = lineLength(sLat, sLon, latVal, lonVal)
         
         
-    
+    print(f'Transect points = {len(r)}')
     return r, transect
+
+#def calculateMultipleTransects(data:bathdata,sLat:float,sLon:float,range_km:float,azStep:float, output='ds'):
+    
+
+    # # get end coordinate arrays
+    # num = int(np.round(360/azStep))
+    # az = np.linspace(0,360,num=num)
+
+    # ds = xr.Dataset(
+    #     data_vars=dict(
+    #         range_m=(["x", "y", "azimuth"], temperature),
+    #         depth_m=(["x", "y", "azimuth"], precipitation),
+
+    #     ),
+
+    #     coords=dict(
+    #         lon=(["x", "y"], lon),
+    #         lat=(["x", "y"], lat),
+       
+    #     ),
+
+    #     attrs=dict(description="Bathymetric Transects."),
+
+    # )
+    # for i,azVal in enumerate(az):
+    #     eLat,eLon = getEndCoord(sLat,sLon,azVal,range_km)
+    
+       
+    #     r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,truncate=False)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
