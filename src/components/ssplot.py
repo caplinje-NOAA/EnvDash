@@ -21,7 +21,7 @@ from ..dataHandling.geoTools import boundingBox, BBfromDict
 from . import ids, alerts, text
 
 
-inputsStore = dcc.Store(id=ids.SSP_INPUTS_STORE, storage_type='session', data={})
+inputsStore = dcc.Store(id=ids.SSP_INPUTS_STORE, storage_type='memory', data={})
 
 print(ids.SSP_PLOT)
 figure = html.Div(dcc.Graph(figure=px.line(),style={'width': '60vh', 'height': '60vh'},id=ids.SSP_PLOT))

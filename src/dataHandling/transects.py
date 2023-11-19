@@ -85,35 +85,61 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate',ma
     print(f'Transect points = {len(r)}')
     return r, transect
 
-#def calculateMultipleTransects(data:bathdata,sLat:float,sLon:float,range_km:float,azStep:float, output='ds'):
+def calculateMultipleTransects(data:bathdata,sLat:float,sLon:float,range_km:float,azStep:float, output='ds'):
     
 
-    # # get end coordinate arrays
-    # num = int(np.round(360/azStep))
-    # az = np.linspace(0,360,num=num)
+    # get end coordinate arrays
+    num = int(np.round(360/azStep))
+    az = np.linspace(0,360,num=num)
 
-    # ds = xr.Dataset(
-    #     data_vars=dict(
-    #         range_m=(["x", "y", "azimuth"], temperature),
-    #         depth_m=(["x", "y", "azimuth"], precipitation),
-
-    #     ),
-
-    #     coords=dict(
-    #         lon=(["x", "y"], lon),
-    #         lat=(["x", "y"], lat),
-       
-    #     ),
-
-    #     attrs=dict(description="Bathymetric Transects."),
-
-    # )
-    # for i,azVal in enumerate(az):
-    #     eLat,eLon = getEndCoord(sLat,sLon,azVal,range_km)
+    # get Northern transect
+    eLat,eLon = getEndCoord(sLat,sLon,0,range_km)
+    init_r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,maxPixelPoint=True,range_km=range_km)
+    
+    transects = np.zeros((len(az),len(init_r)))
+    for i,azVal in enumerate(az):
+        eLat,eLon = getEndCoord(sLat,sLon,azVal,range_km)
     
        
-    #     r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,truncate=False)
+        r,transects[i,:] = calculateTransect(data, sLat, sLon, eLat, eLon,maxPixelPoint=True,range_km=range_km)
+        if len(r)!=len(init_r):
+            raise ValueError('transects do not share range vectors')
         
+    
+    transect_da = xr.DataArray(
+    
+        transects,
+    
+        dims=("azimuth", "range_m"),
+    
+        coords={"azimuth": az, "range_m": r},
+    
+    )
+    
+    ds = transect_da.to_dataset(name = 'depth_m')
+    
+
+    
+    return ds
+        
+def transToDataSet(r:np.ndarray,trans:np.ndarray)->xr.Dataset:
+    transect_da = xr.DataArray(
+    
+        trans,
+    
+        dims=("range_m"),
+    
+        coords={"range_m": r},
+    
+    )
+    
+    ds = transect_da.to_dataset(name = 'depth_m')
+    
+
+    
+    return ds
+    
+    
         
         
         

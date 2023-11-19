@@ -39,7 +39,7 @@ transectDiv =        dcc.Loading(
 bathContent = dbc.Row([dbc.Col(bathDiv,width='auto'),
                       dbc.Col(transectDiv)],style={'flex-wrap': 'nowrap'}) # no wrap fixed the overflow issues with wide transect figures
 
-inputsStore = dcc.Store(id=ids.BATH_INPUTS_STORE, storage_type='session',data={})
+inputsStore = dcc.Store(id=ids.BATH_INPUTS_STORE, storage_type='memory',data={})
 
 def buildFigure(bathdata,BB:boundingBox,source:str)->dcc.Graph:
     """ actual bathymetry plot"""

@@ -27,6 +27,7 @@ def drawTransects(startLatLon, endLatLon):
 
 def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
             # high coupling with bathOptCard related to the inputs dict
+            print('plotting transects')
             if transectType == text.transect_single:
           
                 sLat, sLon = inputs['lat-start'],inputs['lon-start']
@@ -63,6 +64,7 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
            
                 fig = px.line()
                 mapLayers = []
+                print('calculating transects from bathdata')
                 for i,azVal in enumerate(az):
                     eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
             

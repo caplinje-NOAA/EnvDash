@@ -57,6 +57,7 @@ META_DATA_STORE='dachshunds-are-the-best-dogs'
 BATH_INPUTS_STORE = 'bath-inputs-store'
 SSP_INPUTS_STORE = 'ssp-inputs-store'
 SEABED_INPUTS_STORE = 'seabed-inputs-store'
+TRANSECT_INPUTS_STORE = 'transect-inputs-store'
 
 SEABED_SLIDER = 'seabed-slider'
 SEABED_TABLE = 'seabed-table'
@@ -73,6 +74,10 @@ SSP_INPUTS_DISPLAY = 'ssp-inputs-display'
 SEABED_DOWNLOAD_BUTTON = 'seabed-download-button'
 SEABED_DOWNLOAD = 'seabed-download'
 SEABED_INPUTS_DISPLAY = 'seabed-inputs-display'
+TRANSECT_RES_DROPDOWN = 'transect-resolution-dropdown'
+TRANSECT_INPUTS_DISPLAY = 'transect-input-display'
+TRANSECT_DOWNLOAD_BUTTON = 'transect-download-button'
+TRANSECT_DOWNLOAD = 'transect-download'
 
 def SSP_MARKER(loc):
     return {'type':'WOA-data-marker','location':loc}

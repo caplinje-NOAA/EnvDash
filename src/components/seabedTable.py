@@ -30,7 +30,7 @@ seabedTableDiv  =   dcc.Loading(
 
 
 
-inputsStore = dcc.Store(id=ids.SEABED_INPUTS_STORE, storage_type='session',data={})
+inputsStore = dcc.Store(id=ids.SEABED_INPUTS_STORE, storage_type='memory',data={})
 
 
 

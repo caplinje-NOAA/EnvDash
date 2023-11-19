@@ -100,8 +100,6 @@ def render(app: Dash) -> html.Div:
     Output(ids.BATH_INPUTS_STORE,'data'),
     Output(ids.SSP_INPUTS_STORE, 'data'),
     Output(ids.SEABED_INPUTS_STORE,'data'),
-    Output(ids.LAT_INPUT_START, 'value',allow_duplicate=True),
-    Output(ids.LON_INPUT_START, 'value',allow_duplicate=True),
     Output(ids.BB_MAP_LAYER, "children"),
 
     
@@ -156,7 +154,7 @@ def render(app: Dash) -> html.Div:
             BBmapLayer = buildMapLayers(BB)
 
     
-            return bathOut,sspOut,seabedOut, lat, lon, BBmapLayer
+            return bathOut,sspOut,seabedOut, BBmapLayer
    
 
 
