@@ -9,4 +9,4 @@ plotly
 pyproj
 scipy
 xarray
-pytables
+tables
