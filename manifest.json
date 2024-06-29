@@ -6,7 +6,7 @@
     "entrypoint": "main"
   },
   "python": {
-    "version": "3.11.5",
+    "version": "3.8.16",
     "package_manager": {
       "name": "pip",
       "version": "23.0.1",
@@ -15,382 +15,391 @@
   },
   "files": {
     "requirements.txt": {
-      "checksum": "a9c3f18a3b150ef2b7074b62618bc15f"
+      "checksum": "d3bf88309e101648241bb5177a03e57a"
     },
-    ".spyproject/config/backups/codestyle.ini.bak": {
+    ".spyproject\\config\\backups\\codestyle.ini.bak": {
       "checksum": "de8a66cdc6940773667c18ef547a3c09"
     },
-    ".spyproject/config/backups/encoding.ini.bak": {
+    ".spyproject\\config\\backups\\encoding.ini.bak": {
       "checksum": "efd70e7a3292196e011a019dfe3edae2"
     },
-    ".spyproject/config/backups/vcs.ini.bak": {
+    ".spyproject\\config\\backups\\vcs.ini.bak": {
       "checksum": "99fdb6058c7677bb609aeecabcd8dd0f"
     },
-    ".spyproject/config/backups/workspace.ini.bak": {
-      "checksum": "f47d634c70fa63e04789f74a3e1bc468"
+    ".spyproject\\config\\backups\\workspace.ini.bak": {
+      "checksum": "f6dc75765554131cb2f79405aaca87b6"
     },
-    ".spyproject/config/codestyle.ini": {
+    ".spyproject\\config\\codestyle.ini": {
       "checksum": "de8a66cdc6940773667c18ef547a3c09"
     },
-    ".spyproject/config/defaults/defaults-codestyle-0.2.0.ini": {
+    ".spyproject\\config\\defaults\\defaults-codestyle-0.2.0.ini": {
       "checksum": "af6a1f6a1a62a6c37ca62f901d9e89ee"
     },
-    ".spyproject/config/defaults/defaults-encoding-0.2.0.ini": {
+    ".spyproject\\config\\defaults\\defaults-encoding-0.2.0.ini": {
       "checksum": "650d74483ce6734b72719b7fa4a5d28d"
     },
-    ".spyproject/config/defaults/defaults-vcs-0.2.0.ini": {
+    ".spyproject\\config\\defaults\\defaults-vcs-0.2.0.ini": {
       "checksum": "b1abf45d196f109529f667dd556bfbe6"
     },
-    ".spyproject/config/defaults/defaults-workspace-0.2.0.ini": {
+    ".spyproject\\config\\defaults\\defaults-workspace-0.2.0.ini": {
       "checksum": "e9c02b5965a89c2b5dbc2b24a0c42f6d"
     },
-    ".spyproject/config/encoding.ini": {
+    ".spyproject\\config\\encoding.ini": {
       "checksum": "efd70e7a3292196e011a019dfe3edae2"
     },
-    ".spyproject/config/vcs.ini": {
+    ".spyproject\\config\\vcs.ini": {
       "checksum": "99fdb6058c7677bb609aeecabcd8dd0f"
     },
-    ".spyproject/config/workspace.ini": {
-      "checksum": "f47d634c70fa63e04789f74a3e1bc468"
+    ".spyproject\\config\\workspace.ini": {
+      "checksum": "f6dc75765554131cb2f79405aaca87b6"
     },
     "README.md": {
-      "checksum": "150e9822e34c20bfab66e380e5960b42"
+      "checksum": "489963c32128360b14c487ecfce0135d"
     },
-    "assets/style.css": {
+    "assets\\style.css": {
       "checksum": "b974e76cb528a7f22958cc424fb6d7fb"
     },
-    "data/usSeabed/US9_ONE_ABRV2.h5": {
+    "data\\key.bin": {
+      "checksum": "57280b8c78ba25958d9563c6e196150f"
+    },
+    "data\\usSeabed\\US9_ONE_ABRV2.h5": {
       "checksum": "0961517ceb745f9df8560a7d4ff48bf0"
     },
-    "data/usSeabed/codeConverter.py": {
+    "data\\usSeabed\\codeConverter.py": {
       "checksum": "d80f7a5af6944b1e930b3107c76825c5"
     },
-    "data/usSeabed/folkCodes.txt": {
+    "data\\usSeabed\\folkCodes.txt": {
       "checksum": "2462d5d3f66de00446d5c24ce7bcdc5a"
     },
-    "data/usSeabed/seabed_latlon.npy": {
+    "data\\usSeabed\\seabed_latlon.npy": {
       "checksum": "fc4ad79e6e33eae99039c6e848581946"
     },
-    "environment/README.md": {
+    "environment\\README.md": {
       "checksum": "5f6602a53b24a2ee041463842926221d"
     },
-    "environment/requirements.txt": {
+    "environment\\requirements.txt": {
       "checksum": "c1f264e39ce6dfc84c2b34c609780c5a"
     },
     "main.py": {
-      "checksum": "0522a9f7f76eaba138c90158ce5a336b"
+      "checksum": "550100438f3dc985089a7ec9b1efca0a"
     },
-    "requirements_w_versions.txt": {
-      "checksum": "81a12c4a7dd8b4a5178145d89c19b6cf"
+    "requirements_.txt": {
+      "checksum": "f4121e70a79b0da16cad1432ec92e1ab"
     },
-    "src/__init__.py": {
+    "src\\__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
-    "src/__pycache__/__init__.cpython-311.pyc": {
+    "src\\__pycache__\\__init__.cpython-311.pyc": {
       "checksum": "fe337c3a47c1cfa40c6d2a21bfdf0c6e"
     },
-    "src/__pycache__/__init__.cpython-38.pyc": {
+    "src\\__pycache__\\__init__.cpython-38.pyc": {
       "checksum": "43cbcfeffd546f00d715682fb84b77c6"
     },
-    "src/__pycache__/__init__.cpython-39.pyc": {
+    "src\\__pycache__\\__init__.cpython-39.pyc": {
       "checksum": "572eb124677b0828bda7b86196e5f96c"
     },
-    "src/components/__init__.py": {
+    "src\\components\\__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
-    "src/components/__pycache__/__init__.cpython-311.pyc": {
+    "src\\components\\__pycache__\\__init__.cpython-311.pyc": {
       "checksum": "970ede2c54720bbc6cbda10d45b66cf8"
     },
-    "src/components/__pycache__/__init__.cpython-38.pyc": {
+    "src\\components\\__pycache__\\__init__.cpython-38.pyc": {
       "checksum": "281211245041641b0a74aa182b7dcb86"
     },
-    "src/components/__pycache__/__init__.cpython-39.pyc": {
+    "src\\components\\__pycache__\\__init__.cpython-39.pyc": {
       "checksum": "3534e635beece01840b3a0e13eb49010"
     },
-    "src/components/__pycache__/alerts.cpython-311.pyc": {
+    "src\\components\\__pycache__\\alerts.cpython-311.pyc": {
       "checksum": "2c4e63c58401501c9e005944e20b27c8"
     },
-    "src/components/__pycache__/alerts.cpython-38.pyc": {
+    "src\\components\\__pycache__\\alerts.cpython-38.pyc": {
       "checksum": "8395c8bf7278fcc1c5d4d9dfa0a99bbe"
     },
-    "src/components/__pycache__/alerts.cpython-39.pyc": {
+    "src\\components\\__pycache__\\alerts.cpython-39.pyc": {
       "checksum": "bc418bd21fc2e4b3fe87c41568e7781e"
     },
-    "src/components/__pycache__/bar_chart.cpython-39.pyc": {
+    "src\\components\\__pycache__\\bar_chart.cpython-39.pyc": {
       "checksum": "e55922f145d445f829b89ead8f0b6c91"
     },
-    "src/components/__pycache__/bathOptCard.cpython-311.pyc": {
+    "src\\components\\__pycache__\\bathOptCard.cpython-311.pyc": {
       "checksum": "950c6720e38b555cf33fb2bfc26d05bf"
     },
-    "src/components/__pycache__/bathOptCard.cpython-38.pyc": {
+    "src\\components\\__pycache__\\bathOptCard.cpython-38.pyc": {
       "checksum": "e04711617fd40fe5aff11e6faa075cea"
     },
-    "src/components/__pycache__/bathOptCard.cpython-39.pyc": {
+    "src\\components\\__pycache__\\bathOptCard.cpython-39.pyc": {
       "checksum": "25fa2a32fec06c78aefcff4e9fd60f25"
     },
-    "src/components/__pycache__/bathplot.cpython-311.pyc": {
+    "src\\components\\__pycache__\\bathplot.cpython-311.pyc": {
       "checksum": "8c085ad68d897986865c62f68559b2e0"
     },
-    "src/components/__pycache__/bathplot.cpython-38.pyc": {
+    "src\\components\\__pycache__\\bathplot.cpython-38.pyc": {
       "checksum": "71e07a23a634c19ffa56be1e50822213"
     },
-    "src/components/__pycache__/bathplot.cpython-39.pyc": {
+    "src\\components\\__pycache__\\bathplot.cpython-39.pyc": {
       "checksum": "a2a7424bb3163fbcc3204d0b2c75ef7d"
     },
-    "src/components/__pycache__/card_display.cpython-39.pyc": {
+    "src\\components\\__pycache__\\card_display.cpython-39.pyc": {
       "checksum": "7e48f631d80131cfdfdc7364ffa91328"
     },
-    "src/components/__pycache__/card_dropdown.cpython-39.pyc": {
+    "src\\components\\__pycache__\\card_dropdown.cpython-39.pyc": {
       "checksum": "be18f630388149bb33c360445bf88a99"
     },
-    "src/components/__pycache__/cards.cpython-39.pyc": {
+    "src\\components\\__pycache__\\cards.cpython-39.pyc": {
       "checksum": "cc081f2ba8012f2dda548895d3c4a53c"
     },
-    "src/components/__pycache__/centerCoordDropdown.cpython-39.pyc": {
+    "src\\components\\__pycache__\\centerCoordDropdown.cpython-39.pyc": {
       "checksum": "2c545022f68a71ea02fb52664fb6e26f"
     },
-    "src/components/__pycache__/click_display.cpython-39.pyc": {
+    "src\\components\\__pycache__\\click_display.cpython-39.pyc": {
       "checksum": "0e9d2bb85541dbf3de99116ef815a053"
     },
-    "src/components/__pycache__/downloadsCanvas.cpython-311.pyc": {
+    "src\\components\\__pycache__\\downloadsCanvas.cpython-311.pyc": {
       "checksum": "74b65c2a35cc8337c3470dc98c76f6c8"
     },
-    "src/components/__pycache__/genOptCard.cpython-311.pyc": {
+    "src\\components\\__pycache__\\downloadsCanvas.cpython-38.pyc": {
+      "checksum": "69675cdaf75182bda46400d5737c6cbe"
+    },
+    "src\\components\\__pycache__\\genOptCard.cpython-311.pyc": {
       "checksum": "0934479f8879db2cd7b653e7fed2130b"
     },
-    "src/components/__pycache__/genOptCard.cpython-38.pyc": {
+    "src\\components\\__pycache__\\genOptCard.cpython-38.pyc": {
       "checksum": "39e5ee7b16b95855e5ab568249cf8fb3"
     },
-    "src/components/__pycache__/genOptCard.cpython-39.pyc": {
+    "src\\components\\__pycache__\\genOptCard.cpython-39.pyc": {
       "checksum": "d7bc223e76e79e8f88eab73892bba380"
     },
-    "src/components/__pycache__/ids.cpython-311.pyc": {
+    "src\\components\\__pycache__\\ids.cpython-311.pyc": {
       "checksum": "695a7f402bf5fc79b2dd4def4b1c17bf"
     },
-    "src/components/__pycache__/ids.cpython-38.pyc": {
+    "src\\components\\__pycache__\\ids.cpython-38.pyc": {
       "checksum": "8de6d5ff76668b3befdc434ee071070b"
     },
-    "src/components/__pycache__/ids.cpython-39.pyc": {
+    "src\\components\\__pycache__\\ids.cpython-39.pyc": {
       "checksum": "a7c5c7e03d5e58f6793e37ccc072af11"
     },
-    "src/components/__pycache__/layout.cpython-311.pyc": {
+    "src\\components\\__pycache__\\layout.cpython-311.pyc": {
       "checksum": "657915eec34c8740aa59723c49e43199"
     },
-    "src/components/__pycache__/layout.cpython-38.pyc": {
+    "src\\components\\__pycache__\\layout.cpython-38.pyc": {
       "checksum": "e1d711936bf3ce7c311d0bf9586abf5d"
     },
-    "src/components/__pycache__/layout.cpython-39.pyc": {
+    "src\\components\\__pycache__\\layout.cpython-39.pyc": {
       "checksum": "5aa46cae2a5fc540c779292cedd56997"
     },
-    "src/components/__pycache__/map_fig.cpython-311.pyc": {
+    "src\\components\\__pycache__\\map_fig.cpython-311.pyc": {
       "checksum": "0fbab4a479b384ecf9bd68569fa3a6c8"
     },
-    "src/components/__pycache__/map_fig.cpython-38.pyc": {
+    "src\\components\\__pycache__\\map_fig.cpython-38.pyc": {
       "checksum": "f3bae1019398c4120c52584e0b5ce2e6"
     },
-    "src/components/__pycache__/map_fig.cpython-39.pyc": {
+    "src\\components\\__pycache__\\map_fig.cpython-39.pyc": {
       "checksum": "c30509c1573c1e09e379b4d6b07aacdc"
     },
-    "src/components/__pycache__/nation_dropdown.cpython-39.pyc": {
+    "src\\components\\__pycache__\\nation_dropdown.cpython-39.pyc": {
       "checksum": "a87e94a30d200a542d4adc79a530be21"
     },
-    "src/components/__pycache__/seabedOptCard.cpython-311.pyc": {
+    "src\\components\\__pycache__\\seabedOptCard.cpython-311.pyc": {
       "checksum": "1b096833a5789469464a35d85d957908"
     },
-    "src/components/__pycache__/seabedOptCard.cpython-38.pyc": {
+    "src\\components\\__pycache__\\seabedOptCard.cpython-38.pyc": {
       "checksum": "d28641636969028cd22d6d5db0151e7b"
     },
-    "src/components/__pycache__/seabedTable.cpython-311.pyc": {
+    "src\\components\\__pycache__\\seabedTable.cpython-311.pyc": {
       "checksum": "0f38fffa939e1441e31d129087b29e3a"
     },
-    "src/components/__pycache__/seabedTable.cpython-38.pyc": {
+    "src\\components\\__pycache__\\seabedTable.cpython-38.pyc": {
       "checksum": "8d12fee49f07408919e05dab7bd46e7a"
     },
-    "src/components/__pycache__/sspOptCard.cpython-311.pyc": {
+    "src\\components\\__pycache__\\sspOptCard.cpython-311.pyc": {
       "checksum": "2eac1f0262a860984457110f41df79bd"
     },
-    "src/components/__pycache__/sspOptCard.cpython-38.pyc": {
+    "src\\components\\__pycache__\\sspOptCard.cpython-38.pyc": {
       "checksum": "ae21d0eaa5508fcd78a13493dda7e92d"
     },
-    "src/components/__pycache__/sspOptCard.cpython-39.pyc": {
+    "src\\components\\__pycache__\\sspOptCard.cpython-39.pyc": {
       "checksum": "1effab5d256157657affad99edb03a40"
     },
-    "src/components/__pycache__/ssplot.cpython-311.pyc": {
+    "src\\components\\__pycache__\\ssplot.cpython-311.pyc": {
       "checksum": "9bde26cef11a9bc6de57c63a53adba5b"
     },
-    "src/components/__pycache__/ssplot.cpython-38.pyc": {
+    "src\\components\\__pycache__\\ssplot.cpython-38.pyc": {
       "checksum": "f5a66caa804c23a4169448a939c49b93"
     },
-    "src/components/__pycache__/ssplot.cpython-39.pyc": {
+    "src\\components\\__pycache__\\ssplot.cpython-39.pyc": {
       "checksum": "3a5f651a2c433d79dfdf1d2932c104aa"
     },
-    "src/components/__pycache__/stats.cpython-39.pyc": {
+    "src\\components\\__pycache__\\stats.cpython-39.pyc": {
       "checksum": "51a1819a27276efab5ab4dfee2934a9b"
     },
-    "src/components/__pycache__/tabs.cpython-311.pyc": {
+    "src\\components\\__pycache__\\tabs.cpython-311.pyc": {
       "checksum": "a469c2dd2995ee32b3b07afa1461935c"
     },
-    "src/components/__pycache__/tabs.cpython-38.pyc": {
+    "src\\components\\__pycache__\\tabs.cpython-38.pyc": {
       "checksum": "6e3c180aac5480ceca4ec01f7b558dfd"
     },
-    "src/components/__pycache__/tabs.cpython-39.pyc": {
+    "src\\components\\__pycache__\\tabs.cpython-39.pyc": {
       "checksum": "14339233f65c6debde775afc270fde71"
     },
-    "src/components/__pycache__/text.cpython-311.pyc": {
-      "checksum": "c739c1939e2b83b0b2daaafd1f23d5d7"
+    "src\\components\\__pycache__\\text.cpython-311.pyc": {
+      "checksum": "62d6cf379c3623e7d7c12b6861fd40e7"
     },
-    "src/components/__pycache__/text.cpython-38.pyc": {
+    "src\\components\\__pycache__\\text.cpython-38.pyc": {
       "checksum": "050a9a2a00cc8a89f211d4b88d0f9916"
     },
-    "src/components/__pycache__/transectOptCard.cpython-311.pyc": {
+    "src\\components\\__pycache__\\transectOptCard.cpython-311.pyc": {
       "checksum": "909b3112c5a1a5839e26bc99556e9ab8"
     },
-    "src/components/__pycache__/transectPlot.cpython-311.pyc": {
-      "checksum": "07b854f15775275c98f346c872df281d"
+    "src\\components\\__pycache__\\transectOptCard.cpython-38.pyc": {
+      "checksum": "9adaad87b531be0c059700888b066a41"
     },
-    "src/components/__pycache__/transectPlot.cpython-38.pyc": {
+    "src\\components\\__pycache__\\transectPlot.cpython-311.pyc": {
+      "checksum": "331de08edcc50eed45c97614230e1ecc"
+    },
+    "src\\components\\__pycache__\\transectPlot.cpython-38.pyc": {
       "checksum": "3b6fe00839e34c83ec94ae0f79843b3b"
     },
-    "src/components/__pycache__/winodds_chart.cpython-39.pyc": {
+    "src\\components\\__pycache__\\winodds_chart.cpython-39.pyc": {
       "checksum": "4801e29f203117c72e214e4b9bfb8de1"
     },
-    "src/components/alerts.py": {
+    "src\\components\\alerts.py": {
       "checksum": "d880c97827af6be2dec702c3c42ac68c"
     },
-    "src/components/bathOptCard.py": {
+    "src\\components\\bathOptCard.py": {
       "checksum": "884f292fff4c98f5c1c6d895fb18652b"
     },
-    "src/components/bathplot.py": {
+    "src\\components\\bathplot.py": {
       "checksum": "21ea289b9af7b13035d3488a22e2a07c"
     },
-    "src/components/custom/__pycache__/inputGroups.cpython-311.pyc": {
+    "src\\components\\custom\\__pycache__\\inputGroups.cpython-311.pyc": {
       "checksum": "446f918a74bd5af794224bd8d9e863a6"
     },
-    "src/components/custom/__pycache__/inputGroups.cpython-38.pyc": {
+    "src\\components\\custom\\__pycache__\\inputGroups.cpython-38.pyc": {
       "checksum": "fb04e6832df03500fc13bc1a2f4ad8aa"
     },
-    "src/components/custom/__pycache__/inputGroups.cpython-39.pyc": {
+    "src\\components\\custom\\__pycache__\\inputGroups.cpython-39.pyc": {
       "checksum": "d6c17bced1273290540c625ab7f47b76"
     },
-    "src/components/custom/inputGroups.py": {
+    "src\\components\\custom\\inputGroups.py": {
       "checksum": "ef2fadeb20ecf3fdae98f9d039ee78e8"
     },
-    "src/components/downloadsCanvas.py": {
+    "src\\components\\downloadsCanvas.py": {
       "checksum": "85b228321a893d102b5eedf51806ce93"
     },
-    "src/components/genOptCard.py": {
+    "src\\components\\genOptCard.py": {
       "checksum": "4c8cd01a035e71a226371b880f7e22da"
     },
-    "src/components/ids.py": {
+    "src\\components\\ids.py": {
       "checksum": "788242768e19bf40b53260b7d5446888"
     },
-    "src/components/layout.py": {
+    "src\\components\\layout.py": {
       "checksum": "b70ff68590a9de35b8b2d2597aaf819d"
     },
-    "src/components/map_fig.py": {
+    "src\\components\\map_fig.py": {
       "checksum": "e432250b3d0d20c79b843314d03e337b"
     },
-    "src/components/seabedOptCard.py": {
+    "src\\components\\seabedOptCard.py": {
       "checksum": "80c6cafefa00115e513f365c99008c09"
     },
-    "src/components/seabedTable.py": {
+    "src\\components\\seabedTable.py": {
       "checksum": "e59b0314b5072358b7c344c0c044a564"
     },
-    "src/components/sspOptCard.py": {
+    "src\\components\\sspOptCard.py": {
       "checksum": "191f179d8b4f2848890e218d4a542ef5"
     },
-    "src/components/ssplot.py": {
+    "src\\components\\ssplot.py": {
       "checksum": "37991d79fb2b8f4dec7533737056a39e"
     },
-    "src/components/tabs.py": {
+    "src\\components\\tabs.py": {
       "checksum": "ad1925b363a296896392153297ea62a1"
     },
-    "src/components/text.py": {
+    "src\\components\\text.py": {
       "checksum": "3080c19a2e240bc0e5d7bc5aa539c997"
     },
-    "src/components/transectOptCard.py": {
+    "src\\components\\transectOptCard.py": {
       "checksum": "ceefa9a38c83f5b99d6e3eee756e48c1"
     },
-    "src/components/transectPlot.py": {
-      "checksum": "605c217bab737af57ca21da67f6356d5"
+    "src\\components\\transectPlot.py": {
+      "checksum": "4553d841dd7bd07f7e694a9c2ec73220"
     },
-    "src/dataHandling/__pycache__/bathretriever.cpython-311.pyc": {
+    "src\\dataHandling\\__pycache__\\bathretriever.cpython-311.pyc": {
       "checksum": "f3b6f16ed5d2dad769f8da6cfad5887b"
     },
-    "src/dataHandling/__pycache__/bathretriever.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\bathretriever.cpython-38.pyc": {
       "checksum": "84fd2bae9602ca7876318f616f539ce8"
     },
-    "src/dataHandling/__pycache__/bathretriever.cpython-39.pyc": {
+    "src\\dataHandling\\__pycache__\\bathretriever.cpython-39.pyc": {
       "checksum": "f9619162a3b95b0aa6bfca299a8eb265"
     },
-    "src/dataHandling/__pycache__/datapaths.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\datapaths.cpython-38.pyc": {
       "checksum": "425d244176b725e99975274281b66756"
     },
-    "src/dataHandling/__pycache__/geoTools.cpython-311.pyc": {
-      "checksum": "7f04002a55ee4350f506b2184bcbe411"
+    "src\\dataHandling\\__pycache__\\geoTools.cpython-311.pyc": {
+      "checksum": "c72a9ca0eda69c8356e8394acf5764c7"
     },
-    "src/dataHandling/__pycache__/geoTools.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\geoTools.cpython-38.pyc": {
       "checksum": "4857dee6805be2c7a8a9ee2f2a22b4c3"
     },
-    "src/dataHandling/__pycache__/metaDataHandling.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\metaDataHandling.cpython-38.pyc": {
       "checksum": "17f56e9dfb461e2e33dfdefcbd046d4b"
     },
-    "src/dataHandling/__pycache__/read_usSeabed.cpython-311.pyc": {
+    "src\\dataHandling\\__pycache__\\read_usSeabed.cpython-311.pyc": {
       "checksum": "36b7d33abaf35b6d6ed8dae99c8b7378"
     },
-    "src/dataHandling/__pycache__/read_usSeabed.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\read_usSeabed.cpython-38.pyc": {
       "checksum": "ec0c1ff7f7db3e4585299a49e65e6ae2"
     },
-    "src/dataHandling/__pycache__/sspretriever.cpython-311.pyc": {
+    "src\\dataHandling\\__pycache__\\sspretriever.cpython-311.pyc": {
       "checksum": "46489932db9687d6f76801d00b247179"
     },
-    "src/dataHandling/__pycache__/sspretriever.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\sspretriever.cpython-38.pyc": {
       "checksum": "c5b5dd769eabcd1a40e8ca024581e5be"
     },
-    "src/dataHandling/__pycache__/sspretriever.cpython-39.pyc": {
+    "src\\dataHandling\\__pycache__\\sspretriever.cpython-39.pyc": {
       "checksum": "7991dc45cd671b9751bcaac4a1c8449a"
     },
-    "src/dataHandling/__pycache__/tempRequests.cpython-311.pyc": {
+    "src\\dataHandling\\__pycache__\\tempRequests.cpython-311.pyc": {
       "checksum": "7e4ed674be0cf48f11daa761e401e327"
     },
-    "src/dataHandling/__pycache__/tempRequests.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\tempRequests.cpython-38.pyc": {
       "checksum": "57209978aa0b5e81812954bbda7c379d"
     },
-    "src/dataHandling/__pycache__/transects.cpython-311.pyc": {
-      "checksum": "98ae59e4c5a157b3a024cedf686c1fab"
+    "src\\dataHandling\\__pycache__\\transects.cpython-311.pyc": {
+      "checksum": "70a45d50d520347bd3c4cee151e130b5"
     },
-    "src/dataHandling/__pycache__/transects.cpython-38.pyc": {
+    "src\\dataHandling\\__pycache__\\transects.cpython-38.pyc": {
       "checksum": "1694aaf04cb02d9abf5626f2463790f9"
     },
-    "src/dataHandling/bathretriever.py": {
+    "src\\dataHandling\\bathretriever.py": {
       "checksum": "fce3d3eb03d035ddd1d2b626f0e18987"
     },
-    "src/dataHandling/geoTools.py": {
-      "checksum": "08ca5c626f3f3a9e0e101a60edc7abca"
+    "src\\dataHandling\\geoTools.py": {
+      "checksum": "0528e6119cc832900bfc9bd8a6f503d1"
     },
-    "src/dataHandling/metaData/__pycache__/bathymetry.cpython-311.pyc": {
+    "src\\dataHandling\\metaData\\__pycache__\\bathymetry.cpython-311.pyc": {
       "checksum": "9117feda3ece50a19910ef95417ec6e1"
     },
-    "src/dataHandling/metaData/bathGenerator.py": {
+    "src\\dataHandling\\metaData\\__pycache__\\bathymetry.cpython-38.pyc": {
+      "checksum": "9aab829c5bb2a82a21c1c8e87bc66065"
+    },
+    "src\\dataHandling\\metaData\\bathGenerator.py": {
       "checksum": "5f3887aa7fde9f91f924842ce9daf3b3"
     },
-    "src/dataHandling/metaData/bathymetry.py": {
+    "src\\dataHandling\\metaData\\bathymetry.py": {
       "checksum": "072fb73830d0da6c8b5183e5484dcabc"
     },
-    "src/dataHandling/read_usSeabed.py": {
+    "src\\dataHandling\\read_usSeabed.py": {
       "checksum": "0292c20353f148e494117d1fc17962ca"
     },
-    "src/dataHandling/sspretriever.py": {
+    "src\\dataHandling\\sspretriever.py": {
       "checksum": "1183e0551bd3bf5c6b364d57ea609c99"
     },
-    "src/dataHandling/tempRequests.py": {
+    "src\\dataHandling\\tempRequests.py": {
       "checksum": "4c44fa74f86679b7eb5d90f02ade5e05"
     },
-    "src/dataHandling/transects.py": {
-      "checksum": "69593f15deb4bb28ec962d779b35ce66"
-    },
-    "xarrayTesting.py": {
-      "checksum": "39261da7a18303e1108c6a08fe9c997e"
+    "src\\dataHandling\\transects.py": {
+      "checksum": "2a2f38ac9b20447a46bb7eb1e1770fd2"
     }
   }
 }

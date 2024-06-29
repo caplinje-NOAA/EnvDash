@@ -22,6 +22,7 @@ from ..dataHandling.transects import calculateTransect
 from ..dataHandling.geoTools import getEndCoord
 from ..dataHandling.bathretriever import bathdata
 
+transMethod = 'interpolate'
 def drawTransects(startLatLon, endLatLon):
     return dl.Polyline(positions=[startLatLon,endLatLon],color='red')
 
@@ -34,7 +35,7 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
                 eLat, eLon = inputs['lat-end'], inputs['lon-end']
   
             
-                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
+                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,method=transMethod)
                 fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
                
        
@@ -46,7 +47,7 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
                 sLat, sLon = inputs['lat-start'],inputs['lon-start']
                 eLat, eLon = getEndCoord(sLat,sLon,inputs['single-azimuth'],inputs['km'])
                 
-                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon)
+                r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,method=transMethod)
               
                 fig = px.line(x=r,y=transect,title=f'Transect from [{sLat:.2f},{sLon:.2f}] to [{eLat:.2f},{eLon:.2f}]')
                
@@ -69,7 +70,7 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
                     eLat,eLon = getEndCoord(sLat,sLon,azVal,inputs['km'])
             
                
-                    r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,truncate=False,maxPixelPoint=True,range_km=inputs['km'])
+                    r,transect = calculateTransect(data, sLat, sLon, eLat, eLon,truncate=False,maxPixelPoint=True,range_km=inputs['km'],method=transMethod)
             
                     fig.add_trace(px.line(x=r,y=transect).data[0])
                     mapLayers.append(drawTransects([sLat,sLon], [eLat,eLon]))
@@ -79,3 +80,18 @@ def plotTransects(data:bathdata,transectType:str,inputs:dict)->html.Div:
                 
             figure = html.Div(dcc.Graph(figure=fig,style={'width': '100%', 'height': '60vh'}, id=ids.TRANSECT_PLOT))    
             return figure,mapLayers
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

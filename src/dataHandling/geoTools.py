@@ -46,6 +46,14 @@ def getEndCoord(sLat,sLon,az,km):
     eLon, eLat, back = geod.fwd(sLon,sLat,az,dist)
     
     return eLat,eLon
+
+def getIntermediates(startLat,startLon,endLat,endLon,npoints):
+    az12,az21,dist = geod.inv(startLon,startLat,endLon,endLat)
+    del_s = dist/(npoints+1)
+    
+    trans = geod.fwd_intermediate(startLon,startLat,az12,npts=npoints,del_s=del_s)
+    
+    return trans
     
     
 def lineLength(startLat,startLon,endLat,endLon):
@@ -53,4 +61,11 @@ def lineLength(startLat,startLon,endLat,endLon):
 
 def toLon360(lon_180):
     return 360+lon_180
+
+
+
+
+
+    
+    
 

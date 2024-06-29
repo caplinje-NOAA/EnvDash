@@ -1,5 +1,8 @@
 from dash import Dash
 from dash_bootstrap_components.themes import CERULEAN
+import dash_auth
+import hashlib
+import pickle
 
 from src.components.layout import create_layout
 
@@ -10,6 +13,28 @@ app.title = "Acoustic Modeling Environment Explorer"
 app.layout = create_layout(app)
 app.config.suppress_callback_exceptions = True
 
+
+
+def authorize(username,password):
+    superposition = f'{username}:{password}'
+    hashed = hashlib.sha1(superposition.encode('utf-8')).hexdigest()
+    
+    with open('data/key.bin','rb') as f:
+        
+        valid = pickle.load(f)
+    
+    if hashed==valid:
+        return True
+    else:
+        return False
+    
+    
+        
+
+auth = dash_auth.BasicAuth(
+    app,
+    auth_func = authorize
+)
 
 
 if __name__ == "__main__":

@@ -11,13 +11,13 @@ import scipy.ndimage as snd
 import xarray as xr
 
 # project imports
-from .geoTools import lineLength, getEndCoord
+from .geoTools import lineLength, getEndCoord, getIntermediates
 from .bathretriever import bathdata
 
 
 def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate',maxPixelPoint =False, truncate=False, range_km=None):
 
-    
+    # simple method for converting lat/lon to indices (or pixel coordinates)
     def toPixel(coord_latlon):
 
         latPixel = np.argmin(np.abs(coord_latlon[0]-data.lat))
@@ -29,12 +29,14 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate',ma
     endCoord = [eLat,eLon]
 
     
-    # convert to pixel coords
+    # convert endpoints to pixel coords
     startPixelCoord = toPixel(startCoord)
     endPixelCoord = toPixel(endCoord)
 
     
     # define x dimension as longitude, in pixel coordinates ..... y ... latitude ....
+    # determine the number of points along the transect, defined as 'transLenPixels'
+    # The 'maxPixelPoint' option ensures multiple transects share range vectors (at least shapewise), but do they?
     if maxPixelPoint:
         if range_km:
             endCoord45d = getEndCoord(sLat,sLon,45,range_km)
@@ -60,6 +62,14 @@ def calculateTransect(data:bathdata,sLat,sLon,eLat,eLon, method='interpolate',ma
         lon = np.linspace(data.lon[startPixelCoord[1]],data.lon[endPixelCoord[1]],num=transLenPixels)
         lat = np.linspace(data.lat[startPixelCoord[0]],data.lat[endPixelCoord[0]],num=transLenPixels)
         transect = snd.map_coordinates(data.topo,[y,x])
+        
+    elif method=='intermediates':
+        coords = getIntermediates(sLat, sLon, eLat, eLon, transLenPixels)
+        lon = coords.lons
+        lat = coords.lats
+        x = [np.argmin(np.abs(lonVal-data.lon)) for lonVal in lon]
+        y = [np.argmin(np.abs(latVal-data.lat)) for latVal in lat]
+        transect = data.topo[y,x]
     else:
         print(f'Unable to get transect using method {method}.  Method must be "nearest" or "interpolate"')
         return 
