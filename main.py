@@ -17,7 +17,7 @@ app.config.suppress_callback_exceptions = True
 
 def authorize(username,password):
     superposition = f'{username}:{password}'
-    hashed = hashlib.sha1(superposition.encode('utf-8')).hexdigest()
+    hashed = hashlib.sha256(superposition.encode('utf-8')).hexdigest()
     
     with open('data/key.bin','rb') as f:
         
@@ -26,6 +26,7 @@ def authorize(username,password):
     if hashed==valid:
         return True
     else:
+        print(hashed,valid)
         return False
     
     
