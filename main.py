@@ -17,11 +17,12 @@ app.config.suppress_callback_exceptions = True
 
 def authorize(username,password):
     superposition = f'{username}:{password}'
-    hashed = hashlib.sha256(superposition.encode('utf-8')).hexdigest()
+    #hashed = hashlib.sha256(superposition.encode('utf-8')).hexdigest()
+    hashed=superposition
     
     with open('data/key.bin','rb') as f:
         
-        valid = pickle.load(f)
+        valid = f.read().decode('utf-8')
     
     if hashed==valid:
         return True
